@@ -67,8 +67,8 @@ export default class EKBDGraph extends HTMLElement {
         if (
           e.target.hasAttribute('data-left') ||
           e.target.hasAttribute('data-right') ||
-          e.target.hasAttribute('data-top') ||
-          e.target.hasAttribute('data-bottom')
+          e.target.hasAttribute('data-up') ||
+          e.target.hasAttribute('data-down')
         ) {
           this.cursorSelectedElement.removeAttribute('data-cursor-selected')
           this.setCursorToElement(e.target)
@@ -80,10 +80,9 @@ export default class EKBDGraph extends HTMLElement {
       if (
         e.target.hasAttribute('data-left') ||
         e.target.hasAttribute('data-right') ||
-        e.target.hasAttribute('data-top') ||
-        e.target.hasAttribute('data-bottom')
+        e.target.hasAttribute('data-up') ||
+        e.target.hasAttribute('data-down')
       ) {
-        console.log('ok')
         this.cursorSelectedElement.removeAttribute('data-cursor-selected')
         this.setCursorToElement(e.target)
       }
