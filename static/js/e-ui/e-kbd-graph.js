@@ -30,11 +30,13 @@ export default class EKBDGraph extends HTMLElement {
       if (event.key.startsWith('Arrow')) {
         const cursorSelectedElementIsFocusedAndInput = this.isFocused(this.cursorSelectedElement) &&
           this.isInput(this.cursorSelectedElement)
-        const preventDefault = !cursorSelectedElementIsFocusedAndInput
-        if (preventDefault) {
+        if (!cursorSelectedElementIsFocusedAndInput) {
           event.preventDefault()
         }
-        
+        if (cursorSelectedElementIsFocusedAndInput) {
+          return
+        }
+
         const direction = event.key.split('Arrow')[1].toLowerCase()
         const fromElement = this.cursorSelectedElement
         const toElementSelector = fromElement.getAttribute(`data-${direction}`)
@@ -59,6 +61,33 @@ export default class EKBDGraph extends HTMLElement {
         }
       }
     })
+
+    window.addEventListener('focusin', (e) => {
+      if (this.isInput(e.target)) {
+        if (
+          e.target.hasAttribute('data-left') ||
+          e.target.hasAttribute('data-right') ||
+          e.target.hasAttribute('data-top') ||
+          e.target.hasAttribute('data-bottom')
+        ) {
+          this.cursorSelectedElement.removeAttribute('data-cursor-selected')
+          this.setCursorToElement(e.target)
+        }
+      }
+    })
+
+    window.addEventListener('click', (e) => {
+      if (
+        e.target.hasAttribute('data-left') ||
+        e.target.hasAttribute('data-right') ||
+        e.target.hasAttribute('data-top') ||
+        e.target.hasAttribute('data-bottom')
+      ) {
+        console.log('ok')
+        this.cursorSelectedElement.removeAttribute('data-cursor-selected')
+        this.setCursorToElement(e.target)
+      }
+    })
   }
 
   setCursorToElement(elm) {
@@ -73,7 +102,8 @@ export default class EKBDGraph extends HTMLElement {
   }
 
   isInput(elm) {
-    return elm.tagName.toLowerCase() === 'input'
+    const tag = elm.tagName.toLowerCase()
+    return ['input', 'textarea', 'select'].indexOf(tag) >= 0
   }
 }
 
