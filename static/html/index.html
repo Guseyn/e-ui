@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>E-UI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="importmap">
+      {
+        "imports": {
+          "#ehtml/": "/js/ehtml/",
+          "#ehtml/main": "/js/ehtml/main.js",
+          "#e-ui/": "/js/e-ui/",
+          "#e-ui/e-kbd-graph": "/js/e-ui/e-kbd-graph.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import '#ehtml/main'
+      import '#e-ui/e-kbd-graph'
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: system-ui, sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #0f172a;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 220px);
+        gap: 16px;
+      }
+
+      input,
+      button {
+        height: 48px;
+        padding: 0 14px;
+        font-size: 16px;
+        background: #020617;
+        color: white;
+        border: 1px solid #334155;
+        border-radius: 10px;
+      }
+
+      input::placeholder {
+        color: #64748b;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      input:focus,
+      button:focus {
+        outline: none;
+      }
+
+      [data-cursor-selected] {
+        border: 3px solid #38bdf8;
+      }
+    </style>
+  </head>
+  <body>
+  <e-kbd-graph data-first-element="#username">
+      <div class="grid">
+
+        <input id="username"
+          placeholder="Username"
+          data-right="#password"
+          data-down="#login" />
+
+        <input id="password"
+          type="password"
+          placeholder="Password"
+          data-left="#username"
+          data-down="#login" />
+
+        <button id="login"
+          data-up="#username"
+          onclick="console.log('ok')" 
+          data-click-on-enter>
+          Login
+        </button>
+
+        <button id="cancel"
+          data-up="#password"
+          data-click-on-enter>
+          Cancel
+        </button>
+
+      </div>
+    </e-kbd-graph>
+  </body>
+</html>

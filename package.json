@@ -1,0 +1,26 @@
+{
+  "name": "e-ui",
+  "version": "1.0.0",
+  "description": "UI library for SaaS",
+  "type": "module",
+  "scripts": {
+    "server": "node main",
+    "ehtml:update": "yes | cp -rf ../EHTML/src/ static/js/ehtml",
+    "nodes:update": "yes | cp -rf ../nodes.js/nodes/ nodes/",
+    "ehtml:update:reverse": "yes | cp -rf static/js/ehtml/ ../EHTML/src/",
+    "nodes:update:reverse": "yes | cp -rf nodes/ ../nodes.js/nodes/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Guseyn/e-ui.git"
+  },
+  "author": "guseyn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Guseyn/e-ui/issues"
+  },
+  "homepage": "https://github.com/Guseyn/e-ui#readme",
+  "imports": {
+    "#nodes/*": "./nodes/*"
+  }
+}
