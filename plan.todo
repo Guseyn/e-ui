@@ -1,69 +1,57 @@
- ☐ e-kbd-matrix
- ☐ span
-   ☐ is="e-text"
-   ☐ is="e-muted"
-   ☐ is="e-caption"
-   ☐ is="e-error"
-   ☐ is="e-helper"
-   ☐ is="e-badge"
-   ☐ is="e-tag"
-   ☐ is="e-chip"
- ☐ mark is="e-mark"
- ☐ code is="e-code"
- ☐ kbd is="e-kbd"
- ☐ a
-   ☐ is="e-link"
-   ☐ is="e-link-button"
- ☐ label is="e-label"
- ☐ h1-h6 is="e-h"
- ☐ p is="e-p"
- ☐ blockquote is="e-quote"
- ☐ pre is="e-pre"
- ☐ hr
-   ☐ is="e-divider-text"
-   ☐ is="e-divider"
- ☐ div
-   ☐ is="e-box"
-   ☐ is="e-stack"
-   ☐ is="e-row"
-   ☐ is="e-grid"
-   ☐ is="e-spacer"
-   ☐ is="e-card"
-   ☐ is="e-panel"
-   ☐ is="e-surface"
-   ☐ is="e-sheet"
- ☐ section is="e-section"
- ☐ main is="e-main"
- ☐ header is="e-header"
- ☐ footer is="e-footer"
- ☐ button
-   ☐ is="e-button"
- ☐ disabled
- ☐ data-loading
-   ☐ is="e-icon-button"
- ☐ disabled
- ☐ data-loading
-   ☐ is="e-fab"
- ☐ disabled
- ☐ data-loading
- ☐ form is="e-form"
- ☐ fieldset is="e-fieldset"
- ☐ legend is="e-legend"
- ☐ e-tooltip
- ☐ e-toast
- ☐ e-tabs
- ☐ e-tab
- ☐ nav is="e-nav"
- ☐ e-sidebar
- ☐ nav is="e-nave"
- ☐ 
- ☐ table is="e-table"
- ☐ thead, th, tbody, tr, td
- ☐ 
- ☐ ul is="e-list"
- ☐ li is="e-list-item"
- ☐ img
-   ☐ is="e-avatar"
-   ☐ is="icon"
- ☐ progress is="e-progress"
- ☐ dialog is="e-dialog"
+ ☐ e-kbd-graph
+ ✔ span @done (25-12-27 14:23)
+   ✔ is="e-text" @done (25-12-27 14:23)
+   ✔ is="e-muted" @done (25-12-27 14:23)
+   ✔ is="e-caption" @done (25-12-27 14:23)
+   ✔ is="e-error" @done (25-12-27 14:23)
+   ✔ is="e-helper" @done (25-12-27 14:23)
+   ✔ is="e-badge" @done (25-12-27 14:23)
+   ✔ is="e-tag" @done (25-12-27 14:23)
+   ✔ is="e-chip" @done (25-12-27 14:23)
+ ✔ mark is="e-mark" @done (25-12-27 14:52)
+ ✔ code is="e-code" @done (25-12-27 14:52)
+ ✔ kbd is="e-kbd" @done (25-12-27 14:52)
+ ✔ a @done (25-12-27 15:05)
+   ✔ is="e-link" @done (25-12-27 15:05)
+   ✔ is="e-link-button" @done (25-12-27 15:05)
+ ✔ label is="e-label" @done (25-12-27 15:25)
+ ✔ h1-h6 is="e-h" @done (25-12-27 15:25)
+ ✔ p is="e-p" @done (25-12-27 15:25)
+ ✔ blockquote is="e-quote" @done (25-12-27 15:25)
+ ✔ pre is="e-pre" @done (25-12-27 15:25)
+ ✔ hr @done (25-12-27 15:25)
+   ✔ is="e-divider-text" @done (25-12-27 15:25)
+   ✔ is="e-divider" @done (25-12-27 15:25)
+ ✔ div @done (25-12-27 15:35)
+   ✔ is="e-box" @done (25-12-27 15:35)
+   ✔ is="e-stack" @done (25-12-27 15:35)
+   ✔ is="e-row" @done (25-12-27 15:35)
+   ✔ is="e-grid" @done (25-12-27 15:35)
+   ✔ is="e-spacer" @done (25-12-27 15:35)
+   ✔ is="e-card" @done (25-12-27 15:35)
+   ✔ is="e-panel" @done (25-12-27 15:35)
+   ✔ is="e-surface" @done (25-12-27 15:35)
+   ✔ is="e-sheet" @done (25-12-27 15:35)
+ ✔ section is="e-section" @done (25-12-27 16:44)
+ ✔ main is="e-main" @done (25-12-27 16:44)
+ ✔ header is="e-header" @done (25-12-27 16:44)
+ ✔ footer is="e-footer" @done (25-12-27 16:44)
+ ✔ button @done (25-12-27 16:49)
+   ✔ is="e-button" @done (25-12-27 16:49)
+   ✔ disabled @done (25-12-27 16:49)
+ ✔ form is="e-form" @done (25-12-27 16:50)
+ ✔ fieldset is="e-fieldset" @done (25-12-27 16:52)
+ ✔ legend is="e-legend" @done (25-12-27 16:52)
+ ✔ e-tooltip @done (25-12-27 17:07)
+ ✔ e-toast @done (25-12-27 18:48)
+ ✔ e-tabs @done (25-12-27 19:01)
+ ✔ e-tab @done (25-12-27 19:01)
+ ✔ nav is="e-nav" @done (25-12-27 19:24)
+ ✔ e-sidebar @done (25-12-27 20:08)
+ ✔ table is="e-table" @done (25-12-27 20:46)
+   ✔ thead, th, tbody, tr, td @done (25-12-27 20:46)
+ ✔ ul is="e-list" @done (25-12-27 20:49)
+ ✔ li is="e-list-item" @done (25-12-27 20:49)
+ ✔ e-user-icon @done (25-12-27 21:20)
+ ✔ dialog is="e-dialog" @done (25-12-27 21:34)
+ ☐ e-scrollable

@@ -1,4 +1,4 @@
-export default class EKBDGraph extends HTMLElement {
+export default class EKbdGraph extends HTMLElement {
   constructor() {
     super()
     this.ehtmlActivated = false
@@ -106,4 +106,4 @@ export default class EKBDGraph extends HTMLElement {
   }
 }
 
-customElements.define('e-kbd-graph', EKBDGraph)
+customElements.define('e-kbd-graph', EKbdGraph)
