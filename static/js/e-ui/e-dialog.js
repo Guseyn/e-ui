@@ -1,32 +1,46 @@
-class EDialog extends HTMLDialogElement {
-  #activated = false;
+import evaluateActions from '#ehtml/evaluateActions.js'
+import getNodeScopedState from '#ehtml/getNodeScopedState.js'
 
-  connectedCallback() {
-    this.addEventListener('ehtml:activated', () => this.#init(), { once: true })
+class EDialog extends HTMLDialogElement {
+  constructor() {
+    super()
+    this.ehtmlActivated = false
   }
 
-  #init() {
-    if (this.#activated) {
+  connectedCallback() {
+    this.addEventListener(
+      'ehtml:activated',
+      () => this.#onEHTMLActivated(),
+      { once: true }
+    )
+  }
+
+  #onEHTMLActivated() {
+    if (this.ehtmlActivated === true) {
       return
     }
-    this.#activated = true
+    this.ehtmlActivated = true
 
     // Create internal wrapper
     const wrapper = document.createElement('div')
     
     // Create close button
-    const closeBtn = document.createElement('div')
-    closeBtn.setAttribute('data-close', '')
-    
-    const iconUrl = this.getAttribute('data-close-icon')
-    if (iconUrl) {
-      closeBtn.innerHTML = `<img src="${iconUrl}" width="20" height="20">`
-    } else {
-      closeBtn.textContent = '×'
-    }
+    if (this.hasAttribute('data-close-icon')) {
+      const closeBtn = document.createElement('div')
+      closeBtn.setAttribute('is', 'e-close-icon')
+      
+      const iconUrl = this.getAttribute('data-close-icon')
+      if (iconUrl) {
+        closeBtn.innerHTML = `<img src="${iconUrl}">`
+      }
 
-    closeBtn.onclick = () => this.close()
-    wrapper.appendChild(closeBtn)
+      closeBtn.onclick = () => this.close()
+      wrapper.appendChild(closeBtn)
+
+      this.addEventListener('scroll', () => {
+        closeBtn.style.transform = `translate(${(this.scrollLeft)}px, ${(this.scrollTop)}px)`
+      })
+    }
 
     // Move existing children into the wrapper
     while (this.firstChild) {
@@ -40,16 +54,60 @@ class EDialog extends HTMLDialogElement {
         this.close()
       }
     })
+
+    if (this.hasAttribute('data-open-on-load')) {
+      const closestTab = this.closest('e-tab')
+      if (
+        !closestTab ||
+        (closestTab && closestTab.getAttribute('data-active') === 'true')
+      ) {
+        this.showModal()
+      }
+    }
+
+    this.addEventListener('scroll', () => {
+      const tabNavInside = this.querySelector('e-tabs > nav') 
+      if (tabNavInside) {
+        tabNavInside.style.transform = `translate(${(this.scrollLeft)}px, ${(this.scrollTop)}px)`
+      }
+      const toastsInside = Array(...this.querySelectorAll('e-toast'))
+      if (toastsInside.length > 0) {
+        toastsInside.forEach(toast => {
+          toast.style.transform = `translate(${(this.scrollLeft)}px, ${(this.scrollTop)}px)`
+        })
+      }
+    })
+
+    window.addEventListener('keydown', (event) => {
+      if (this.open && event.key.toLowerCase() === 'escape') {
+        event.preventDefault()
+        this.close()
+      }
+    })    
   }
 
   showModal() {
     this.#lock()
     super.showModal()
+    if (this.hasAttribute('data-onopen')) {
+      evaluateActions(
+        this.getAttribute('data-onopen'),
+        this,
+        getNodeScopedState(this)
+      )
+    }
   }
 
   close(returnValue) {
     super.close(returnValue)
     this.#unlock()
+    if (this.hasAttribute('data-onclose')) {
+      evaluateActions(
+        this.getAttribute('data-onclose'),
+        this,
+        getNodeScopedState(this)
+      )
+    }
   }
 
   #lock() {
@@ -66,7 +124,7 @@ class EDialog extends HTMLDialogElement {
     document.body.style.top = ''
     document.body.style.width = ''
     document.body.removeAttribute('data-prev-scroll-y')
-    window.scrollTo(0, y)
+    window.scrollTo({ left: 0, top: y, behavior: 'instant' })
   }
 }
 

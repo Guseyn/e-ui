@@ -1,10 +1,24 @@
 class EToast extends HTMLElement {
+  #timer = null
+
   constructor() {
     super()
+    this.ehtmlActivated = false
   }
 
   connectedCallback() {
-    this.#timer = null
+    this.addEventListener(
+      'ehtml:activated',
+      this.#onEHTMLActivated,
+      { once: true }
+    )
+  }
+
+  #onEHTMLActivated() {
+    if (this.ehtmlActivated) {
+      return
+    }
+    this.ehtmlActivated = true
     this.#setup()
   }
 
@@ -45,16 +59,20 @@ class EToast extends HTMLElement {
     })
   }
 
-  open() {
+  open(content, delay) {
     this.#closeOthers()
 
     if (this.#timer) {
       clearTimeout(this.#timer)
     }
 
+    if (content) {
+      this.querySelector('div').innerHTML = content
+    }
+
     this.setAttribute('data-state', 'opening')
 
-    const delay = parseFloat(this.getAttribute('data-hide-after-n-seconds'));
+    delay = delay || parseFloat(this.getAttribute('data-hide-after-n-seconds'));
     if (!isNaN(delay) && delay > 0) {
       this.#timer = setTimeout(() => {
         this.close()

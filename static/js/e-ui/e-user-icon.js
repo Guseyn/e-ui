@@ -1,6 +1,6 @@
 class EUserIcon extends HTMLElement {
   static get observedAttributes() {
-    return ['data-user-avatar', 'data-user-initials', 'data-bg-color']
+    return ['data-user-avatar', 'data-user-initials', 'data-background-color']
   }
 
   connectedCallback() {
@@ -14,7 +14,7 @@ class EUserIcon extends HTMLElement {
   #render() {
     const avatar = this.getAttribute('data-user-avatar')
     const initials = this.getAttribute('data-user-initials') || ''
-    const bgColor = this.getAttribute('data-bg-color')
+    const bgColor = this.getAttribute('data-background-color')
 
     if (bgColor) {
       this.style.backgroundColor = bgColor
