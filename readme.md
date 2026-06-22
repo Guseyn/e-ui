@@ -228,6 +228,8 @@ These patterns need only `e-ui.css`. They are separate from typography and layou
 
 ### Buttons
 
+Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [forms-buttons.png](static/images/forms-buttons.png)
+
 ```html
 <button data-primary>Solid</button>
 <button data-primary data-fill="outlined">Outlined</button>
@@ -240,9 +242,9 @@ These patterns need only `e-ui.css`. They are separate from typography and layou
 <a is="e-link-button" data-variant="outline" href="#">Outline link button</a>
 ```
 
-Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [forms-buttons.png](static/images/forms-buttons.png)
-
 ### Forms
+
+Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [forms-buttons.png](static/images/forms-buttons.png)
 
 ```html
 <form is="e-form" data-width="sm">
@@ -294,6 +296,8 @@ File inputs inside `e-form` pick up drag-and-drop styling automatically when gen
 
 ### User avatar
 
+Live demo: [forms-buttons.html](static/html/examples/chips-kbd.html) · Screenshot: [user-avatar.png](static/images/user-avatar.png)
+
 Circular avatar with initials or background image. With EHTML, `data-text` is evaluated into the element on activation.
 
 ```html
@@ -316,6 +320,8 @@ Size with `data-size`, `data-width`, or `data-height` (`3xs`–`3xl`).
 
 ### Tooltip
 
+Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [forms-buttons.png](static/images/tooltip.png)
+
 `e-tooltip` is styled by CSS only — wrap the trigger element and set `data-tip`:
 
 ```html
@@ -335,6 +341,8 @@ Use the `e-scrollable` tag for overflow containers (also used internally by mult
 ```
 
 ### Keyboard hint appearance
+
+Live demo: [chips-kbd.html](static/html/examples/chips-kbd.html) · Screenshot: [forms-buttons.png](static/images/kbd.png)
 
 `kbd[is="e-kbd"]` is styled by CSS. To bind a global shortcut, import `e-kbd.js` — see [Custom elements](#custom-elements).
 
@@ -555,23 +563,6 @@ Add `data-always-on` to keep the checkbox list visible without a search-triggere
   data-on-week-change="/* EHTML actions */"
 ></template>
 ```
-
----
-
-## Example pages
-
-| Page | Demo | Screenshot |
-|------|------|------------|
-| Gallery | [index.html](static/html/index.html) | — |
-| Typography & layout | [typography-layout.html](static/html/examples/typography-layout.html) | [typography-layout.png](static/images/typography-layout.png) |
-| Forms & buttons | [forms-buttons.html](static/html/examples/forms-buttons.html) | [forms-buttons.png](static/images/forms-buttons.png) |
-| Dialog & toast | [dialog-toast.html](static/html/examples/dialog-toast.html) | [dialog.png](static/images/dialog.png), [toast.png](static/images/toast.png) |
-| Sidebar & tabs | [sidebar-tabs.html](static/html/examples/sidebar-tabs.html) | [sidebar-tabs.png](static/images/sidebar-tabs.png) |
-| Chips & keyboard | [chips-kbd.html](static/html/examples/chips-kbd.html) | [chips-kbd.png](static/images/chips-kbd.png) |
-| Multiselect dropdown | [multiselect-dropdown.html](static/html/examples/multiselect-dropdown.html) | [multiselect-dropdown.png](static/images/multiselect-dropdown.png) |
-| File upload | [file-upload.html](static/html/examples/file-upload.html) | [file-upload.png](static/images/file-upload.png) |
-
-Save screenshots under `static/images/` using the filenames above so they open from GitHub in a new tab.
 
 ---
 
