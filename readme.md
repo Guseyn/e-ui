@@ -10,7 +10,7 @@ UI library for SaaS applications. **e-ui** provides a design system (CSS) and in
 
 ## Quick start
 
-**e-ui is designed to be used with [EHTML](https://e-html.org).** EHTML activates templates, binds data, and runs actions; e-ui components listen for EHTML's `ehtml:activated` event before initializing. Import e-ui modules **before** `#ehtml/main` so custom elements are registered when EHTML activates the page.
+**e-ui is designed to be used with [EHTML](https://e-html.org).** EHTML activates templates, binds data, and runs actions; e-ui components listen for EHTML's `ehtml:activated` event before initializing. Import e-ui modules **after** `#ehtml/main` so custom elements are registered when EHTML activates the page.
 
 ```html
 <!DOCTYPE html>
