@@ -1,4 +1,5 @@
 import getNodeScopedState from '#ehtml/getNodeScopedState.js'
+import setNodeScopedState from '#ehtml/setNodeScopedState.js'
 import evaluatedValueWithParamsFromState from '#ehtml/evaluatedValueWithParamsFromState.js'
 
 export default class EIfTemplate extends HTMLTemplateElement {
@@ -8,28 +9,29 @@ export default class EIfTemplate extends HTMLTemplateElement {
   }
 
   connectedCallback() {
-    this.addEventListener('ehtml:activated', this.onEHTMLActivated, { once: true })
+    this.addEventListener(
+      'ehtml:activated',
+      this.#onEHTMLActivated,
+      { once: true }
+    )
   }
 
-  onEHTMLActivated() {
+  #onEHTMLActivated() {
     if (this.ehtmlActivated) {
       return
     }
     this.ehtmlActivated = true
 
-    this.run()
+    this.#run()
   }
 
-  run() {
+  #run() {
     const expr = this.getAttribute('data-condition-to-display')
     if (!expr) {
       throw new Error(`<template is="e-if"> must have data-condition-to-display`)
     }
 
-    // 1. Get inherited lexical state at this <template>
     const state = getNodeScopedState(this)
-
-    // 2. Evaluate the list expression (JSON string)
     const evaluated = evaluatedValueWithParamsFromState(
       expr.replace(/\n/g, ' '),
       state,
@@ -39,15 +41,20 @@ export default class EIfTemplate extends HTMLTemplateElement {
     const show = evaluated === true || evaluated === 'true'
 
     if (show) {
-      this.insertContent()
+      this.#insertContent(state)
     } else {
       this.remove()
     }
   }
 
-  insertContent() {
+  #insertContent(state) {
     // Clone the <template> content
     const fragment = this.content.cloneNode(true)
+    for (const child of fragment.childNodes) {
+      if (child.nodeType === 1) {
+        setNodeScopedState(child, state)
+      }
+    }
     const parent = this.parentNode
     parent.insertBefore(fragment, this)
     parent.replaceChild(fragment, this)

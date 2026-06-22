@@ -1,3 +1,6 @@
+import getNodeScopedState from '#ehtml/getNodeScopedState.js'
+import evaluatedStringWithParamsFromState from '#ehtml/evaluatedStringWithParamsFromState.js'
+
 export default class ESessionStorageValue extends HTMLElement {
   constructor() {
     super()
@@ -5,24 +8,33 @@ export default class ESessionStorageValue extends HTMLElement {
   }
 
   connectedCallback() {
-    this.addEventListener('ehtml:activated', this.onEHTMLActivated, { once: true })
+    this.addEventListener(
+      'ehtml:activated',
+      this.#onEHTMLActivated,
+      { once: true }
+    )
   }
 
-  onEHTMLActivated() {
+  #onEHTMLActivated() {
     if (this.ehtmlActivated) {
       return
     }
     this.ehtmlActivated = true
-    this.run()
+    this.#run()
   }
 
-  run() {
+  #run() {
     // exactly same behavior as before
     this.name = this.getAttribute('name')
 
     this.value = () => {
-      return localStorage.getItem(
-        this.getAttribute('data-key')
+      const state = getNodeScopedState(this)
+      return sessionStorage.getItem(
+        evaluatedStringWithParamsFromState(
+          this.getAttribute('data-key'),
+          state,
+          this
+        )
       )
     }
   }

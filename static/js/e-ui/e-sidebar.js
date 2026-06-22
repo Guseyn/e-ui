@@ -17,7 +17,8 @@ class ESidebar extends HTMLElement {
       return
     }
     this.ehtmlActivated = true
-    if (sessionStorage.getItem('e-sidebar-open')) {
+    const isMobile = window.matchMedia('(max-width: 950px)').matches
+    if (!isMobile && sessionStorage.getItem('e-sidebar-open')) {
       this.setAttribute('data-state', 'open')
     } else {
       this.setAttribute('data-state', 'closed')
@@ -29,7 +30,9 @@ class ESidebar extends HTMLElement {
         }
       )
     }
-    this.#setupDesktopHover()
+    if (!isMobile) {
+      this.#setupDesktopHover()
+    }
     this.#setupMobile()
     this.#saveSidebarNaveScrollTop()
     this.#adjustPaddingOfNav()

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — File Upload</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#e-ui/e-file-upload-template.js'
+    import '#e-ui/e-toast.js'
+    import '#ehtml/main'
+
+    window.showErrorToast = (message) => {
+      document.querySelector('#upload-toast').open(message)
+    }
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+  </style>
+</head>
+<body>
+  <e-toast
+    id="upload-toast"
+    data-type="error"
+    data-position="bottom-right"
+    data-hide-after-n-seconds="5"
+    data-close-icon="/images/close-light.svg"
+  ></e-toast>
+
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">File Upload</h1>
+      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <div is="e-stack" data-gap="2xl">
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Single image upload</h2>
+          <p is="e-p">
+            <span is="e-muted">Click or drag a file onto the drop zone. Validation errors appear as toasts.</span>
+          </p>
+          <form is="e-form" data-width="md" onsubmit="event.preventDefault()">
+            <div is="e-stack" data-gap="md">
+              <template
+                is="e-file-upload"
+                data-name="avatar"
+                data-accept="image/png, image/jpeg"
+                data-icon-src="/images/upload-image.svg"
+                data-label-text="Profile photo"
+                data-action-text="Click or drag a file here to upload"
+                data-details-text="PNG or JPG up to 2 MB."
+                data-max-size-in-mb="2"
+                data-show-errors-in-toast
+                data-set-height
+                data-required
+              ></template>
+              <button data-primary type="submit">Save</button>
+            </div>
+          </form>
+        </section>
+
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Multiple files</h2>
+          <p is="e-p">
+            <span is="e-muted">Upload up to 3 documents at once.</span>
+          </p>
+          <form is="e-form" data-width="md" onsubmit="event.preventDefault()">
+            <div is="e-stack" data-gap="md">
+              <template
+                is="e-file-upload"
+                multiple
+                data-name="attachments"
+                data-accept="application/pdf"
+                data-icon-src="/images/upload-image.svg"
+                data-action-text="Click or drag files here to upload"
+                data-details-text="PDF. Max 3 files, 5 MB each."
+                data-max-size-in-mb="5"
+                data-max-number-of-files="3"
+                data-show-errors-in-toast
+                data-set-height
+              ></template>
+              <div is="e-row" data-gap="md" data-keep-flex-direction-row-in-mobile>
+                <button data-primary type="submit">Upload</button>
+                <button
+                  data-primary
+                  data-fill="outlined"
+                  type="reset"
+                  onclick="this.form.reset()"
+                >Reset</button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

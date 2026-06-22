@@ -31,17 +31,12 @@ export default function releaseTemplate(elmSelectorOrElm) {
   //   will merge this patch into the parent’s lexical state.
   //
   //   If template needs data, the user should call mapToTemplate().
-  // We use queueMicrotask() to ensure this event fires *after* the current
-  // synchronous DOM operations complete, so if the template is appended
-  // synchronously before this call, it will already be connected.
-  queueMicrotask(() => {
-    element.dispatchEvent(
-      new CustomEvent('ehtml:template-triggered', {
-        bubbles: false,
-        detail: { state: {} }
-      })
-    )
-  })
+  element.dispatchEvent(
+    new CustomEvent('ehtml:template-triggered', {
+      bubbles: false,
+      detail: { state: {} }
+    })
+  )
 }
 
 window.releaseTemplate = releaseTemplate

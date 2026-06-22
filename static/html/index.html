@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EHTML Modern UI</title>
+  <title>e-ui — Example Gallery</title>
   <script type="importmap">
   {
     "imports": {
@@ -15,18 +15,55 @@
   </script>
   <script type="module">
     import '#ehtml/main'
-
-    import '#e-ui/e-kbd-graph.js'
-    import '#e-ui/e-kbd.js'
-    import '#e-ui/e-sidebar.js'
-    import '#e-ui/e-tab.js'
-    import '#e-ui/e-toast.js'
-    import '#e-ui/e-user-icon.js'
-    import '#e-ui/e-dialog.js'
   </script>
   <link rel="stylesheet" href="/css/e-ui.css">
 </head>
 <body>
-  <e-sidebar data-type="left"></e-sidebar>
+  <div is="e-stack" data-gap="xl" data-padding="2xl">
+    <header>
+      <h1 is="e-h">e-ui Example Gallery</h1>
+      <p is="e-p">
+        <span is="e-muted">Run </span>
+        <code is="e-code">npm run server</code>
+        <span is="e-muted"> then open these pages to preview components.</span>
+      </p>
+    </header>
+
+    <main is="e-main" data-centralized>
+      <div is="e-grid" data-columns="2" data-gap="lg">
+        <a is="e-link-button" href="/html/examples/typography-layout.html" data-variant="outline">
+          Typography &amp; Layout
+        </a>
+        <a is="e-link-button" href="/html/examples/forms-buttons.html" data-variant="outline">
+          Forms &amp; Buttons
+        </a>
+        <a is="e-link-button" href="/html/examples/dialog-toast.html" data-variant="outline">
+          Dialog &amp; Toast
+        </a>
+        <a is="e-link-button" href="/html/examples/sidebar-tabs.html?page=dashboard" data-variant="outline">
+          Sidebar &amp; Tabs
+        </a>
+        <a is="e-link-button" href="/html/examples/chips-kbd.html" data-variant="outline">
+          Chips &amp; Keyboard
+        </a>
+        <a is="e-link-button" href="/html/examples/multiselect-dropdown.html" data-variant="outline">
+          Multiselect Dropdown
+        </a>
+        <a is="e-link-button" href="/html/examples/file-upload.html" data-variant="outline">
+          File Upload
+        </a>
+      </div>
+
+      <hr is="e-divider" data-margin-top="2xl" data-margin-bottom="lg">
+
+      <section is="e-section">
+        <h3 is="e-h">Documentation</h3>
+        <p is="e-p">
+          See <a is="e-link" data-underlined href="https://github.com/Guseyn/e-ui">readme.md</a>
+          for the full component reference.
+        </p>
+      </section>
+    </main>
+  </div>
 </body>
 </html>

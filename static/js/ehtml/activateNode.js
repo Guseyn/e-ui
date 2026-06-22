@@ -33,7 +33,7 @@ export default function activateNode(node) {
   }
 
   // 3. Native <template> (NO "is") — attach template-trigger listener once
-  if (isTemplate(node) && !node.getAttribute('is')) {    
+  if (isTemplate(node) && !node.getAttribute('is')) { 
     if (!node.ehtmlTemplateTriggerEventListenerAttached) {
       node.ehtmlTemplateTriggerEventListenerAttached = true
       if (node.hasAttribute('data-release-on-load')) {

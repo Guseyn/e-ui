@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Dialog &amp; Toast</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#e-ui/e-toast.js'
+    import '#e-ui/e-dialog.js'
+    import '#ehtml/main'
+
+    const successToast = document.querySelector('#toast-success')
+    const errorToast = document.querySelector('#toast-error')
+
+    document.querySelector('#btn-success-toast').addEventListener('click', () => {
+      successToast.open('Changes saved successfully!')
+    })
+
+    document.querySelector('#btn-error-toast').addEventListener('click', () => {
+      errorToast.open('Something went wrong. Please try again.')
+    })
+
+    document.querySelector('#btn-dialog-normal').addEventListener('click', () => {
+      document.querySelector('#dialog-normal').showModal()
+    })
+
+    document.querySelector('#btn-dialog-small').addEventListener('click', () => {
+      document.querySelector('#dialog-small').showModal()
+    })
+
+    document.querySelector('#btn-dialog-large').addEventListener('click', () => {
+      document.querySelector('#dialog-large').showModal()
+    })
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+  </style>
+</head>
+<body>
+  <e-toast
+    id="toast-success"
+    data-type="success"
+    data-position="top-right"
+    data-hide-after-n-seconds="4"
+    data-close-icon="/images/close-light.svg"
+  ></e-toast>
+  <e-toast
+    id="toast-error"
+    data-type="error"
+    data-position="bottom-right"
+    data-hide-after-n-seconds="6"
+    data-close-icon="/images/close-light.svg"
+  ></e-toast>
+
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">Dialog &amp; Toast</h1>
+      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <div is="e-stack" data-gap="2xl">
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Toasts</h2>
+          <p is="e-p">
+            <span is="e-muted">Transient notifications anchored to screen corners.</span>
+          </p>
+          <div is="e-row" data-gap="md" data-keep-flex-direction-row-in-mobile>
+            <button id="btn-success-toast" data-primary>Show success toast</button>
+            <button id="btn-error-toast" data-primary data-fill="danger">Show error toast</button>
+          </div>
+        </section>
+
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Dialogs</h2>
+          <p is="e-p">
+            <span is="e-muted">Modal dialogs with backdrop click and Escape to close.</span>
+          </p>
+          <div is="e-row" data-gap="md" data-flex-wrap="wrap" data-keep-flex-direction-row-in-mobile>
+            <button id="btn-dialog-normal" data-primary>Normal dialog</button>
+            <button id="btn-dialog-small" data-primary data-fill="outlined">Small dialog</button>
+            <button id="btn-dialog-large" data-primary data-fill="outlined">Large dialog</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="dialog-normal" is="e-dialog" data-size="normal" data-close-icon="/images/close-dark.svg">
+    <div data-padding="lg">
+      <h2 is="e-h">Confirm action</h2>
+      <p is="e-p">This is a normal-sized modal dialog. Click outside or press Escape to close.</p>
+      <div is="e-row" data-gap="sm" data-margin-top="lg" data-keep-flex-direction-row-in-mobile>
+        <button data-primary data-fill="outlined" onclick="document.querySelector('#dialog-normal').close()">Cancel</button>
+        <button data-primary onclick="document.querySelector('#dialog-normal').close()">Confirm</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="dialog-small" is="e-dialog" data-size="small" data-close-icon="/images/close-dark.svg">
+    <div data-padding="lg">
+      <h3 is="e-h">Small dialog</h3>
+      <p is="e-p">Compact modal for quick confirmations.</p>
+      <button data-primary data-margin-top="md" onclick="document.querySelector('#dialog-small').close()">OK</button>
+    </div>
+  </dialog>
+
+  <dialog id="dialog-large" is="e-dialog" data-size="large" data-close-icon="/images/close-dark.svg">
+    <div data-padding="lg">
+      <h2 is="e-h">Large dialog</h2>
+      <p is="e-p">Use for forms or detailed content.</p>
+      <form is="e-form" data-no-style data-width="full" onsubmit="event.preventDefault(); document.querySelector('#dialog-large').close()">
+        <div is="e-row" data-gap="xl" data-align-items="start" data-keep-flex-direction-row-in-mobile>
+          <div is="e-stack" data-gap="md" data-width="full">
+            <label>
+              First name
+              <input type="text" name="first-name" placeholder="Jane">
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" placeholder="you@example.com">
+            </label>
+            <label>
+              Phone
+              <input type="tel" name="phone" placeholder="+1 555 000 0000">
+            </label>
+          </div>
+          <div is="e-stack" data-gap="md" data-width="full">
+            <label>
+              Last name
+              <input type="text" name="last-name" placeholder="Doe">
+            </label>
+            <label>
+              Role
+              <select name="role">
+                <option>Student</option>
+                <option>Instructor</option>
+                <option>Admin</option>
+              </select>
+            </label>
+            <label>
+              Notes
+              <textarea name="notes" rows="3" placeholder="Optional message"></textarea>
+            </label>
+          </div>
+        </div>
+        <button data-primary type="submit" data-margin-top="lg">Save</button>
+      </form>
+    </div>
+  </dialog>
+</body>
+</html>

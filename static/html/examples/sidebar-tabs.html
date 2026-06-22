@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Sidebar &amp; Tabs</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#e-ui/e-sidebar.js'
+    import '#e-ui/e-tab.js'
+    import '#ehtml/main'
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+  </style>
+  <style>
+    /* Demo layout: sidebar + main content */
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+    .demo-main {
+      flex: 1;
+      margin-left: var(--e-sidebar-collapsed);
+      transition: margin-left var(--e-sidebar-transition);
+    }
+    e-sidebar[data-state="open"] ~ .demo-main {
+      margin-left: var(--e-sidebar-expanded);
+    }
+    @media (max-width: 980px) {
+      .demo-main { margin-left: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+  <template
+    is="e-page-with-url"
+    data-url-pattern="/html/examples/sidebar-tabs.html?{page}"
+  >
+    <div is="overlay"></div>
+    <header is="e-header">
+      <span is="e-bold">e-ui Demo</span>
+      <div
+        is="e-user-avatar"
+        data-size="sm"
+        style="background-color: #009F6B;"
+      >
+        JD
+      </div>
+    </header>
+
+    <e-sidebar
+      data-side="left"
+      data-mobile-header='header[is="e-header"]'
+      data-mobile-menu-icon="/images/menu-icon.svg"
+      data-mobile-body-overlay="div[is='overlay']"
+    >
+      <header>
+        <span is="e-bold" data-font-size="lg">e-ui</span>
+      </header>
+      <nav>
+        <a href="/html/examples/sidebar-tabs.html?page=dashboard" data-selected="${urlParams.page === 'dashboard'}">
+          <img src="/images/dashboard.svg" alt="">
+          <span>Dashboard</span>
+        </a>
+        <a href="/html/examples/sidebar-tabs.html?page=calendar" data-selected="${urlParams.page === 'calendar'}">
+          <img src="/images/calendar.svg" alt="">
+          <span>Calendar</span>
+        </a>
+        <a href="/html/examples/sidebar-tabs.html?page=users" data-selected="${urlParams.page === 'users'}">
+          <img src="/images/users.svg">
+          <span>Users</span>
+        </a>
+        <hr is="e-divider">
+        <a href="/html/index.html">
+          <img src="/images/exit.svg" alt="">
+          <span>Exit to Gallery</span>
+        </a>
+      </nav>
+      <footer>
+        <div is="e-row" data-gap="sm" data-keep-flex-direction-row-in-mobile>
+          <div
+            is="e-user-avatar"
+            data-size="sm"
+            style="background-color: #009F6B;"
+          >
+            JD
+          </div>
+          <span is="e-muted" data-hide-on-sidebar-closed data-font-size="sm">Jane Doe</span>
+          <div is="e-spacer"></div>
+          <button
+            is="e-with-icon"
+            title="Toggle sidebar"
+            data-hide-on-sidebar-closed
+            onclick="const s = document.querySelector('e-sidebar'); s.getAttribute('data-state') === 'open' ? s.close() : s.open()"
+          >
+            <img src="/images/collapse.svg" alt="">
+          </button>
+        </div>
+      </footer>
+    </e-sidebar>
+
+    <main is="e-main">
+      <div is="e-box"
+        data-block-center
+        data-default-main-width
+        data-padding="xl">
+          <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+            <h1 is="e-h"></span>Sidebar &amp; Tabs<span data-text=" (in ${urlParams['page']})"></h1>
+          </div>
+
+          <p is="e-p" data-margin-bottom="md">
+            <span is="e-muted">Hover the sidebar on desktop to expand. On mobile, use the menu button in the header.</span>
+          </p>
+
+          <e-tabs data-apply-hash-navigation>
+            <e-tab data-title="Overview">
+              <div is="e-panel" data-padding="lg" data-margin-top="lg">
+                <h3 is="e-h">Overview</h3>
+                <p is="e-p">Tab content with hash navigation enabled. URL hash updates when switching tabs.</p>
+              </div>
+            </e-tab>
+            <e-tab data-title="Activity">
+              <div is="e-panel" data-padding="lg" data-margin-top="lg">
+                <h3 is="e-h">Activity</h3>
+                <p is="e-p">Recent activity would appear here.</p>
+              </div>
+            </e-tab>
+            <e-tab data-title="Settings">
+              <div is="e-panel" data-padding="lg" data-margin-top="lg">
+                <h3 is="e-h">Settings</h3>
+                <p is="e-p">App settings panel example.</p>
+              </div>
+            </e-tab>
+          </e-tabs>
+      </div>
+    </main>
+  </template>
+</body>
+</html>

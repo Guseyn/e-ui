@@ -51,22 +51,28 @@ function initializeFileUpload(node) {
   const accept = node.getAttribute('data-accept')
   fileInputField.setAttribute('accept', accept)
   const fileInputIcon = document.createElement('img')
-  fileInputIcon.setAttribute('src', node.getAttribute('data-icon-src'))
-  const actionSpan = document.createElement('span')
-  actionSpan.innerText = node.getAttribute('data-action-text')
-  const detailsSpan = document.createElement('span')
-  detailsSpan.innerText = node.getAttribute('data-details-text')
+  fileInputIcon.src = node.getAttribute('data-icon-src')
+
+  if (node.hasAttribute('data-action-text')) {
+    const actionSpan = document.createElement('span')
+    actionSpan.innerText = node.getAttribute('data-action-text')
+    label.appendChild(actionSpan)
+  }
+
+  if (node.hasAttribute('data-details-text')) {
+    const detailsSpan = document.createElement('span')
+    detailsSpan.innerText = node.getAttribute('data-details-text')
+    label.appendChild(detailsSpan)
+  }
+  
   label.appendChild(fileInputField)
   label.appendChild(fileInputIcon)
-  label.appendChild(actionSpan)
-  label.appendChild(detailsSpan)
-
-  const fileNameSpan = document.createElement('b')
-  label.appendChild(fileNameSpan)
 
   if (node.internalState && node.internalState['preuploadedFiles']) {
+    const fileNameSpan = document.createElement('b')
     if (preuploadedFiles.length > 0) {
       fileNameSpan.innerHTML = preuploadedFiles.map(file => `<a href="${file.url}${queryForPreuploadedFiles}">${file.filename}</a>`).join('<br>')
+      label.appendChild(fileNameSpan)
     }
   }
 
@@ -80,7 +86,7 @@ function initializeFileUpload(node) {
 
   const maxSizeInMb = node.getAttribute('data-max-size-in-mb') * 1
 
-  fileInputField.addEventListener('change', (e) => {
+  fileInputField.addEventListener('change', async (e) => {
     if (node.hasAttribute('multiple')) {
       const files = [...e.target.files]
       if (node.hasAttribute('data-max-number-of-files')) {
@@ -97,18 +103,38 @@ function initializeFileUpload(node) {
           return
         }
       }
-      files.forEach((file, index) => {
+      for (const [index, file] of files.entries()) {
         if (index > 0) {
-          laodFile(file, maxSizeInMb, true)
+          await loadFile(file, maxSizeInMb, true)
         } else {
-          laodFile(file, maxSizeInMb)
+          await loadFile(file, maxSizeInMb)
         }
-      })
+      }
     } else {
       const file = e.target.files[0]
-      laodFile(file, maxSizeInMb)
+      await loadFile(file, maxSizeInMb)
     }
   })
+
+  if (fileInputField.form) {
+    fileInputField.form.addEventListener('reset', () => {
+        if (node.internalState && node.internalState['preuploadedFiles']) {
+          const fileNameSpan = document.createElement('b')
+          if (preuploadedFiles.length > 0) {
+            fileNameSpan.innerHTML = preuploadedFiles.map(file => `<a href="${file.url}${queryForPreuploadedFiles}">${file.filename}</a>`).join('<br>')
+            label.appendChild(fileNameSpan)
+          }
+        } else {
+          const fileNameSpanFromPrevSelection = label.querySelector('b[data-name="file-names"]')
+          if (fileNameSpanFromPrevSelection) {
+            label.removeChild(fileNameSpanFromPrevSelection)
+          }
+          if (accept.includes('image') && fileInputIcon && node.getAttribute('data-icon-src')) {
+            fileInputIcon.src = node.getAttribute('data-icon-src')
+          }
+        }
+    })
+  }
 
   label.addEventListener('dragover', (e) => {
     e.preventDefault()
@@ -119,7 +145,7 @@ function initializeFileUpload(node) {
     label.classList.remove('dragover')
   })
 
-  label.addEventListener('drop', (e) => {
+  label.addEventListener('drop', async (e) => {
     e.preventDefault()
     label.classList.remove('dragover')
 
@@ -139,20 +165,20 @@ function initializeFileUpload(node) {
           return
         }
       }
-      files.forEach((file, index) => {
+      for (const [index, file] of files) {
         if (index > 0) {
-          laodFile(file, maxSizeInMb, true)
+          await loadFile(file, maxSizeInMb, true)
         } else {
-          laodFile(file, maxSizeInMb)
+          await loadFile(file, maxSizeInMb)
         }
-      })
+      }
     } else {
       const file = e.dataTransfer.files[0]
-      laodFile(file, maxSizeInMb)
+      await loadFile(file, maxSizeInMb)
     }
   })
 
-  function laodFile(file, maxSizeInMb, appendFile) {
+  async function loadFile(file, maxSizeInMb, appendFile) {
     if (!file) {
       return
     }
@@ -184,17 +210,35 @@ function initializeFileUpload(node) {
       return
     }
 
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      if (appendFile) {
-        fileNameSpan.innerText += ', ' + file.name
-      } else {
-        fileNameSpan.innerText = file.name
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        try {
+          const fileNameSpanFromPrevSelection = label.querySelector('b[data-name="file-names"]')
+          let previousFileNames
+          if (fileNameSpanFromPrevSelection) {
+            previousFileNames = fileNameSpanFromPrevSelection.innerText
+            label.removeChild(fileNameSpanFromPrevSelection)
+          }
+          if (!node.hasAttribute('data-hide-upload-file-name')) {
+            const fileNameSpan = document.createElement('b')
+            fileNameSpan.setAttribute('data-name' , 'file-names')
+            label.appendChild(fileNameSpan)
+            if (appendFile && previousFileNames) {
+              fileNameSpan.innerText += previousFileNames + ', ' + file.name
+            } else if (fileNameSpan) {
+              fileNameSpan.innerText = file.name
+            }
+          }
+          if (accept.includes('image')) {
+            fileInputIcon.src = e.target.result
+          }
+          resolve(e.target.result)
+        } catch (err) {
+          reject(err)
+        }
       }
-      if (accept.includes('image')) {
-        fileInputIcon.src = e.target.result
-      }
-    }
-    reader.readAsDataURL(file)
+      reader.readAsDataURL(file)
+    })
   }
 }

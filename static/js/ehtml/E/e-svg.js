@@ -7,25 +7,28 @@ import evaluateActionsOnProgress from '#ehtml/evaluateActionsOnProgress.js'
 import scrollToHash from '#ehtml/actions/scrollToHash.js'
 
 export default class ESvg extends HTMLElement {
-
   constructor() {
     super()
     this.ehtmlActivated = false
   }
 
   connectedCallback() {
-    this.addEventListener('ehtml:activated', this.onEHTMLActivated, { once: true })
+    this.addEventListener(
+      'ehtml:activated',
+      this.#onEHTMLActivated,
+      { once: true }
+    )
   }
 
-  onEHTMLActivated() {
+  #onEHTMLActivated() {
     if (this.ehtmlActivated) {
       return
     }
     this.ehtmlActivated = true
-    this.run()
+    this.#run()
   }
 
-  run() {
+  #run() {
     const state = getNodeScopedState(this)
 
     if (this.hasAttribute('data-actions-on-progress-start')) {

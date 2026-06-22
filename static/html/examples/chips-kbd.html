@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Chips &amp; Keyboard</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#e-ui/e-selectable-chip.js'
+    import '#e-ui/e-kbd.js'
+    import '#e-ui/e-kbd-graph.js'
+    import '#e-ui/e-toast.js'
+    import '#ehtml/main'
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+    button[data-cursor-selected="true"] {
+      border-width: 3px;
+    }
+  </style>
+</head>
+<body>
+  <e-toast
+    data-type="info"
+    data-position="top-right"
+    data-hide-after-n-seconds="3"
+  ></e-toast>
+
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">Chips &amp; Keyboard</h1>
+      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <section is="e-section" data-margin-bottom="2xl">
+        <h2 is="e-h">Selectable chips</h2>
+        <p is="e-p" data-margin-bottom="lg">
+          <span is="e-muted">Click chips to toggle selection.</span>
+        </p>
+        <div is="e-row" data-gap="sm" data-flex-wrap="wrap" data-keep-flex-direction-row-in-mobile>
+          <e-selectable-chip data-value="jazz" data-selected="true">Jazz</e-selectable-chip>
+          <e-selectable-chip data-value="rock">Rock</e-selectable-chip>
+          <e-selectable-chip data-value="classical">Classical</e-selectable-chip>
+          <e-selectable-chip data-value="electronic">Electronic</e-selectable-chip>
+        </div>
+        <button
+          id="btn-show-selection"
+          data-primary
+          data-margin-top="lg"
+          onclick="
+            const selected = [...document.querySelectorAll(`e-selectable-chip[data-selected='true']`)]
+              .map(chip => chip.textContent.trim())
+            document.querySelector('e-toast').open(
+              selected.length ? `Selected: ${selected.join(', ')}` : 'No genres selected'
+            )
+          "
+        >
+          Show selection
+        </button>
+      </section>
+
+      <section is="e-stack" data-gap="md" data-margin-bottom="2xl">
+        <h2 is="e-h">User avatar</h2>
+        <div is="e-row" data-gap="lg" data-keep-flex-direction-row-in-mobile>
+          <div
+            is="e-user-avatar"
+            data-size="md"
+            style="background-color: #3551A4;"
+          >
+            AB
+          </div>
+          <div
+            is="e-user-avatar"
+            data-size="md"
+            style="background: url('/images/4T7A8724(2).jpg') center center / cover no-repeat; color: transparent;"
+          >
+          </div>
+        </div>
+      </section>
+
+      <section is="e-section" data-margin-bottom="2xl">
+        <h2 is="e-h">Keyboard shortcut</h2>
+        <p is="e-p">
+          Press
+          <kbd is="e-kbd" data-action="document.querySelector('e-toast').open('Shortcut triggered!')">Ctrl + K</kbd>
+          <span is="e-muted"> to show a toast (outside of input fields).</span>
+        </p>
+      </section>
+
+      <section is="e-section">
+        <h2 is="e-h">Keyboard graph</h2>
+        <p is="e-p" data-margin-bottom="lg">
+          <span is="e-muted">Use arrow keys to move selection; Enter to activate.</span>
+        </p>
+        <e-kbd-graph data-first-element="button[data-nav='1']">
+          <div is="e-row" data-gap="md" data-keep-flex-direction-row-in-mobile>
+            <button
+              data-nav="1"
+              data-right="button[data-nav='2']"
+              data-click-on-enter
+              data-primary
+              data-fill="outlined"
+              onclick="
+                alert('first button clicked')
+              "
+            >One</button>
+            <button
+              data-nav="2"
+              data-left="button[data-nav='1']"
+              data-right="button[data-nav='3']"
+              data-click-on-enter
+              data-primary
+              data-fill="outlined"
+              onclick="
+                alert('second button clicked')
+              "
+            >Two</button>
+            <button
+              data-nav="3"
+              data-left="button[data-nav='2']"
+              data-click-on-enter
+              data-primary
+              data-fill="outlined"
+              onclick="
+                alert('third button clicked')
+              "
+            >Three</button>
+          </div>
+        </e-kbd-graph>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -11,10 +11,13 @@ const ATTRIBUTE_NAMES_TO_IGNORE_SINCE_THEY_MUST_BE_RESOLVED_IN_THEIR_OWN_SCOPE_A
   'data-item-name',
   'data-bound-to',
   'data-cache-from',
-  'data-src',
   'data-request-headers',
   'data-request-url',
-  'data-socket'
+  'data-socket',
+  'data-prepend-to',
+  'data-append-to',
+  'data-insert-into',
+  'data-place-instead'
 ]
 
 const TAGS_WITH_SRC_ATTRIBUTE = [
@@ -98,6 +101,13 @@ const NATIVE_EVENT_LISTENERS = [
   "onsecuritypolicyviolation", "onvisibilitychange", "onbeforematch", "oncancel"
 ]
 
+const TAGS_THAT_CAN_BE_DISABLED = [
+  'input',
+  'select',
+  'textarea',
+  'button'
+]
+
 const hasParams = v => v.includes('${')
 
 export default function processAttributes(node) {
@@ -116,7 +126,14 @@ export default function processAttributes(node) {
     const ignore =
       ATTRIBUTE_NAMES_TO_IGNORE_SINCE_THEY_MUST_BE_RESOLVED_IN_THEIR_OWN_SCOPE_AND_TIME.includes(name) ||
       (name === 'data-src' && !TAGS_WITH_SRC_ATTRIBUTE.includes(tag)) ||
-      NATIVE_EVENT_LISTENERS.includes(name)
+      NATIVE_EVENT_LISTENERS.includes(name) ||
+      (
+        node.hasAttribute('data-attributes-to-ignore') &&
+        node.getAttribute('data-attributes-to-ignore')
+          .split(',')
+          .map(a => a.trim())
+          .includes(name)
+      )
 
     if (ignore) {
       continue
@@ -129,9 +146,9 @@ export default function processAttributes(node) {
 
     // evaluate now
     const state = getNodeScopedState(node)
-    
+
     if (name === 'data-internal-state') {
-      const evaluated = evaluatedValueWithParamsFromState(rawValue, state, node)
+      const evaluated = evaluatedValueWithParamsFromState(rawValue, state, node, false)
       node.internalState = evaluated
       node.setAttribute(
         name,
@@ -147,6 +164,12 @@ export default function processAttributes(node) {
     }
 
     // ---- attribute transformations -----
+
+    if (TAGS_THAT_CAN_BE_DISABLED.indexOf(tag) >= 0 && node.hasAttribute('data-disabled')) {
+      if (evaluatedString === 'true') {
+        node.setAttribute('disabled', '')
+      }
+    }
 
     if (name === 'data-text') {
       const textNode = document.createTextNode(evaluatedString)
@@ -177,7 +200,7 @@ export default function processAttributes(node) {
       continue
     }
 
-    if (name === 'data-src' && TAGS_WITH_SRC.includes(tag)) {
+    if (name === 'data-src' && TAGS_WITH_SRC_ATTRIBUTE.includes(tag)) {
       node.setAttribute('src', evaluatedString)
       node.removeAttribute('data-src')
       continue

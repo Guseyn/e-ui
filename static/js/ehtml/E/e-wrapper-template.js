@@ -12,18 +12,22 @@ export default class EWrapperTemplate extends HTMLTemplateElement {
   }
 
   connectedCallback() {
-    this.addEventListener('ehtml:activated', this.onEHTMLActivated, { once: true })
+    this.addEventListener(
+      'ehtml:activated',
+      this.#onEHTMLActivated,
+      { once: true }
+    )
   }
 
-  onEHTMLActivated() {
+  #onEHTMLActivated() {
     if (this.ehtmlActivated) {
       return
     }
     this.ehtmlActivated = true
-    this.run()
+    this.#run()
   }
 
-  run() {
+  #run() {
     const state = getNodeScopedState(this)
 
     if (this.hasAttribute('data-actions-on-progress-start')) {
@@ -64,7 +68,7 @@ export default class EWrapperTemplate extends HTMLTemplateElement {
           throw err
         }
 
-        this.insert(resObj.body)
+        this.#insert(resObj.body)
 
         if (this.hasAttribute('data-actions-on-progress-end')) {
           evaluateActionsOnProgress(
@@ -79,16 +83,13 @@ export default class EWrapperTemplate extends HTMLTemplateElement {
     )
   }
 
-  insert(html) {
-    // Create fragment
+  #insert(html) {
     const fetched = document.createElement('template')
     fetched.innerHTML = html
     const fetchedContent = fetched.content.cloneNode(true)
 
-    // Step 1: Insert fetched HTML into DOM BEFORE manipulation
     this.parentNode.insertBefore(fetchedContent, this)
 
-    // Step 2: Look for placeholder in real DOM
     const placeholderSelector = this.getAttribute('data-where-to-place')
     const how = this.getAttribute('data-how-to-place') || 'after'
 
@@ -100,10 +101,8 @@ export default class EWrapperTemplate extends HTMLTemplateElement {
       )
     }
 
-    // Step 3: Clone wrapper content
     const wrapperContent = this.content.cloneNode(true)
 
-    // Step 4: Insert wrapper content into real DOM
     if (how === 'before') {
       placeholder.parentNode.insertBefore(wrapperContent, placeholder)
     } else if (how === 'after') {

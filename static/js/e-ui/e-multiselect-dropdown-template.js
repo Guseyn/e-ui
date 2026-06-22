@@ -59,12 +59,17 @@ function initializeMultiselect (node) {
   searchInput.setAttribute('type', 'text')
   searchInput.setAttribute('placeholder', 'Search...')
   searchInput.setAttribute('name', 'search')
+  searchInput.setAttribute('autocomplete', 'off')
+  searchInput.setAttribute('data-ignore', 'true')
 
   searchLabel.appendChild(searchInput)
 
   multiSelect.appendChild(searchLabel)
 
   const arrayOfValues = node.internalState['values'] || []
+  const valueDisplayFunction = node.internalState['valueDisplayFunction'] || function (internalState, value) {
+    return value
+  }
   const arrayOfSelectedValues = node.internalState['selectedValues'] || []
 
   const dropdown = document.createElement('e-scrollable')
@@ -75,7 +80,8 @@ function initializeMultiselect (node) {
     closeLinkBox.setAttribute('is', 'e-stack')
     closeLinkBox.setAttribute('data-elm', 'close-link')
     const closeLink = document.createElement('span')
-    closeLink.addEventListener('click', () => {
+    closeLink.addEventListener('click', (e) => {
+      e.preventDefault()
       dropdown.style.display = 'none'
       searchInput.blur()
       return false
@@ -91,11 +97,8 @@ function initializeMultiselect (node) {
     kbd.innerHTML = 'escape'
     closeLinkBox.appendChild(kbd)
     dropdown.appendChild(closeLinkBox)
-    dropdown.addEventListener('scroll', () => {
-      closeLinkBox.style.transform = `translate(${(dropdown.scrollLeft)}px, ${(dropdown.scrollTop)}px)`
-    })
   } else {
-    dropdown.style.display = 'block'
+    dropdown.style.display = ''
     dropdown.setAttribute('data-always-on', '')
   }
   const allLabels = []
@@ -106,6 +109,7 @@ function initializeMultiselect (node) {
   }
   arrayOfValues.forEach((value, index) => {
     const label = document.createElement('label')
+    label.setAttribute('data-font-size', 'xs')
     const input = document.createElement('input')
     input.setAttribute('type', 'checkbox')
     input.addEventListener('change', () => {
@@ -114,29 +118,18 @@ function initializeMultiselect (node) {
       }
     })
     input.setAttribute('name', name)
-    input.setAttribute('style', 'margin-right: 0.5rem;')
+    input.setAttribute('data-margin-right', 'sm')
     input.value = value
     if (arrayOfSelectedValues.includes(input.value)) {
       input.checked = true
     }
     label.appendChild(input)
-    const contentNode = node.content.cloneNode(true)
-    let labelInnerTemplate
-    if (contentNode.childNodes) {
-      for (let i = 0; i < contentNode.childNodes.length; i++) {
-        if (contentNode.childNodes[i] instanceof HTMLTemplateElement) {
-          labelInnerTemplate = contentNode.childNodes[i]
-          break
-        }
-      }
-    }
-    if (!labelInnerTemplate) {
-      label.appendChild(document.createTextNode(value))
-    } else {
-      const labelInnerTemplateClone = labelInnerTemplate.cloneNode(true)
-      labelInnerTemplateClone.internalState = { value, index }
-      label.appendChild(labelInnerTemplateClone)
-    }
+
+    label.appendChild(
+      document.createTextNode(
+        valueDisplayFunction(node.internalState, value)
+      )
+    )
     labelColumn.appendChild(label)
     allLabels.push(label)
   })
@@ -145,6 +138,9 @@ function initializeMultiselect (node) {
     node.hasAttribute('data-no-results-on-search-message')
       ? node.getAttribute('data-no-results-on-search-message')
       : 'No Results'
+  notFoundLabel.style.display = 'none'
+  notFoundLabel.setAttribute('data-padding', 'md')
+  notFoundLabel.setAttribute('data-font-size', 'md')
   dropdown.appendChild(notFoundLabel)
   multiSelect.appendChild(dropdown)
 
@@ -156,8 +152,8 @@ function initializeMultiselect (node) {
     filterOptions(event.target.value, allLabels)
   })
 
-  searchInput.addEventListener('click', (event) => {
-    dropdown.style.display = 'block'
+  searchInput.addEventListener('focus', (event) => {
+    dropdown.style.display = ''
   })
 
   node.parentNode.replaceChild(
@@ -170,6 +166,7 @@ function initializeMultiselect (node) {
     let atLeastOneMatches = false
     items.forEach(label => {
       const matched = label.textContent.toLowerCase().includes(query)
+        || label.querySelector('input[type="checkbox"]').value.includes(query)
       label.style.display = matched ? '' : 'none'
       if (matched) {
         atLeastOneMatches = true
@@ -179,6 +176,15 @@ function initializeMultiselect (node) {
       notFoundLabel.style.display = 'block'
     } else {
       notFoundLabel.style.display = 'none'
+    }
+  }
+
+  if (listOfSelectedElements) {
+    const form = listOfSelectedElements.closest('form')
+    if (form) {
+      form.addEventListener('reset', () => {
+        listOfSelectedElements.innerHTML = ''
+      })
     }
   }
 

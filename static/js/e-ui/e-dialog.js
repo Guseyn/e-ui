@@ -2,6 +2,8 @@ import evaluateActions from '#ehtml/evaluateActions.js'
 import getNodeScopedState from '#ehtml/getNodeScopedState.js'
 
 class EDialog extends HTMLDialogElement {
+  #wrapper
+
   constructor() {
     super()
     this.ehtmlActivated = false
@@ -22,7 +24,7 @@ class EDialog extends HTMLDialogElement {
     this.ehtmlActivated = true
 
     // Create internal wrapper
-    const wrapper = document.createElement('div')
+    this.#wrapper = document.createElement('div')
     
     // Create close button
     if (this.hasAttribute('data-close-icon')) {
@@ -35,18 +37,14 @@ class EDialog extends HTMLDialogElement {
       }
 
       closeBtn.onclick = () => this.close()
-      wrapper.appendChild(closeBtn)
-
-      this.addEventListener('scroll', () => {
-        closeBtn.style.transform = `translate(${(this.scrollLeft)}px, ${(this.scrollTop)}px)`
-      })
+      this.#wrapper.appendChild(closeBtn)
     }
 
     // Move existing children into the wrapper
     while (this.firstChild) {
-      wrapper.appendChild(this.firstChild)
+      this.#wrapper.appendChild(this.firstChild)
     }
-    this.appendChild(wrapper)
+    this.appendChild(this.#wrapper)
 
     // Close on backdrop click
     this.addEventListener('click', (e) => {
@@ -65,25 +63,20 @@ class EDialog extends HTMLDialogElement {
       }
     }
 
-    this.addEventListener('scroll', () => {
-      const tabNavInside = this.querySelector('e-tabs > nav') 
-      if (tabNavInside) {
-        tabNavInside.style.transform = `translate(${(this.scrollLeft)}px, ${(this.scrollTop)}px)`
-      }
-      const toastsInside = Array(...this.querySelectorAll('e-toast'))
-      if (toastsInside.length > 0) {
-        toastsInside.forEach(toast => {
-          toast.style.transform = `translate(${(this.scrollLeft)}px, ${(this.scrollTop)}px)`
-        })
-      }
-    })
-
     window.addEventListener('keydown', (event) => {
-      if (this.open && event.key.toLowerCase() === 'escape') {
+      if (this.open && event.key && event.key.toLowerCase() === 'escape') {
         event.preventDefault()
         this.close()
       }
-    })    
+    })
+
+    const isTrueWebKit = /AppleWebKit/i.test(navigator.userAgent) && 
+                         !/Chrome/i.test(navigator.userAgent) && 
+                         !/Chromium/i.test(navigator.userAgent)
+
+    if (isTrueWebKit) {
+      // this.style.height = 'auto'
+    }  
   }
 
   showModal() {

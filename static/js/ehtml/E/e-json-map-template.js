@@ -14,33 +14,47 @@ export default class EJsonMapTemplate extends HTMLTemplateElement {
   }
 
   connectedCallback() {
-    this.addEventListener('ehtml:activated', this.onEHTMLActivated, { once: true })
-    this.addEventListener('ehtml:template-triggered', this.onEHTMLTemplateTriggered)
+    this.addEventListener(
+      'ehtml:activated',
+      this.#onEHTMLActivated,
+      { once: true }
+    )
+    this.addEventListener(
+      'ehtml:template-triggered',
+      this.#onEHTMLTemplateTriggered
+    )
   }
 
   disconnectedCallback() {
-    this.removeEventListener('ehtml:template-triggered', this.onEHTMLTemplateTriggered)
+    this.removeEventListener(
+      'ehtml:template-triggered',
+      this.#onEHTMLTemplateTriggered
+    )
   }
 
-  onEHTMLActivated() {
+  #onEHTMLActivated() {
     if (this.ehtmlActivated) {
       return
     }
     this.ehtmlActivated = true
-    this.run()
+    this.#run()
   }
 
-  run() {
+  #run() {
     const state = getNodeScopedState(this)
 
     const ajaxIconSelector = this.getAttribute('data-ajax-icon')
-    const ajaxIcon = ajaxIconSelector ? document.querySelector(ajaxIconSelector) : null
+    const ajaxIcon = ajaxIconSelector
+      ? document.querySelector(ajaxIconSelector)
+      : null
     if (ajaxIcon) {
       ajaxIcon.style.display = ''
     }
 
     const progressBarSelector = this.getAttribute('data-progress-bar')
-    const progressBar = progressBarSelector ? document.querySelector(progressBarSelector) : null
+    const progressBar = progressBarSelector
+      ? document.querySelector(progressBarSelector)
+      : null
     if (progressBar) {
       progressBar.max = 100
       progressBar.value = 0
@@ -147,7 +161,7 @@ export default class EJsonMapTemplate extends HTMLTemplateElement {
     )
   }
 
-  onEHTMLTemplateTriggered(event) {
+  #onEHTMLTemplateTriggered(event) {
     const template = event?.target ?? this
     const state = event?.detail?.state ?? getNodeScopedState(this)
 

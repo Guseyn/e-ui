@@ -29,7 +29,8 @@ class ESelectableChip extends HTMLElement {
     if (this.getAttribute('data-selected') === 'true') {
       this.select()
     }
-    this.addEventListener('click', () => {
+    this.addEventListener('click', (event) => {
+      event.preventDefault()
       if (!this.selected) {
         this.select()
       } else {

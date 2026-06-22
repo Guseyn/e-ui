@@ -22,5 +22,9 @@
   "homepage": "https://github.com/Guseyn/e-ui#readme",
   "imports": {
     "#nodes/*": "./nodes/*"
+  },
+  "browser.importmap": {
+    "#ehtml/": "/js/ehtml/",
+    "#e-ui/": "/js/e-ui/"
   }
 }

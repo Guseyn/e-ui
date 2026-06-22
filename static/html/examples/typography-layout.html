@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Typography &amp; Layout</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#ehtml/main'
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+</head>
+<body>
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">Typography &amp; Layout</h1>
+      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <section is="e-section" data-margin-bottom="2xl">
+        <h2 is="e-h">Headings</h2>
+        <div is="e-stack" data-gap="sm">
+          <h1 is="e-h">Heading 1</h1>
+          <h2 is="e-h">Heading 2</h2>
+          <h3 is="e-h">Heading 3</h3>
+          <h4 is="e-h">Heading 4</h4>
+          <h5 is="e-h">Heading 5</h5>
+          <h6 is="e-h" data-color="muted" data-text-case="upper">Heading 6 muted</h6>
+        </div>
+      </section>
+
+      <section is="e-section" data-margin-bottom="2xl">
+        <h2 is="e-h">Text variants</h2>
+        <div is="e-stack" data-gap="md">
+          <p is="e-p">Default paragraph text using the interface font.</p>
+          <span is="e-muted">Muted secondary text for descriptions.</span>
+          <span is="e-bold">Bold emphasis</span>
+          <span is="e-caption">Caption — smaller supporting text</span>
+          <span is="e-error">Error message styling</span>
+          <span is="e-helper">Helper text below a field</span>
+          <span is="e-badge">Badge</span>
+          <span is="e-tag">Tag</span>
+          <span is="e-chip">Chip <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='5' fill='%233551A4'/%3E%3C/svg%3E" alt=""></span>
+          <p is="e-p">Inline <mark is="e-mark">highlighted</mark> and <code is="e-code">code</code> snippets.</p>
+          <blockquote is="e-quote">A blockquote for testimonials or callouts.</blockquote>
+        </div>
+      </section>
+
+      <section is="e-section" data-margin-bottom="2xl">
+        <h2 is="e-h">Layout primitives</h2>
+        <div is="e-grid" data-gap="lg">
+          <div is="e-card" data-padding="lg">
+            <span is="e-bold">Card</span>
+            <p is="e-p" data-margin-top="sm">Bordered surface with shadow.</p>
+          </div>
+          <div is="e-panel" data-padding="lg">
+            <span is="e-bold">Panel</span>
+            <p is="e-p" data-margin-top="sm">Full-width elevated panel.</p>
+          </div>
+          <div is="e-info" data-padding="md">
+            <span is="e-bold">Info box</span>
+            <p is="e-p" data-margin-top="sm">Muted background for notices.</p>
+          </div>
+        </div>
+      </section>
+
+      <section is="e-section" data-margin-bottom="2xl">
+        <h2 is="e-h">Row &amp; stack</h2>
+        <div is="e-row" data-gap="md" data-keep-flex-direction-row-in-mobile data-margin-bottom="lg">
+          <div is="e-box" data-padding="md" data-background="muted" data-border-radius="md">Item A</div>
+          <div is="e-box" data-padding="md" data-background="muted" data-border-radius="md">Item B</div>
+          <div is="e-spacer"></div>
+          <div is="e-box" data-padding="md" data-background="primary" data-color="light" data-border-radius="md">End</div>
+        </div>
+        <div is="e-stack" data-gap="sm" data-width="sm">
+          <div is="e-box" data-padding="sm" data-border-radius="sm" data-background="surface">Stack item 1</div>
+          <div is="e-box" data-padding="sm" data-border-radius="sm" data-background="surface">Stack item 2</div>
+        </div>
+      </section>
+
+      <section is="e-section">
+        <h2 is="e-h">Table</h2>
+        <table is="e-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alice</td>
+              <td>Admin</td>
+              <td><span is="e-badge">Active</span></td>
+            </tr>
+            <tr>
+              <td>Bob</td>
+              <td>Member</td>
+              <td><span is="e-muted">Pending</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

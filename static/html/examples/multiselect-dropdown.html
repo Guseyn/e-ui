@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Multiselect Dropdown</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#e-ui/e-kbd.js'
+    import '#e-ui/e-multiselect-dropdown-template.js'
+    import '#e-ui/e-toast.js'
+    import '#ehtml/main'
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+  </style>
+</head>
+<body>
+  <e-toast
+    data-type="info"
+    data-position="top-right"
+    data-hide-after-n-seconds="4"
+    data-close-icon="/images/close-light.svg"
+  ></e-toast>
+
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">Multiselect Dropdown</h1>
+      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <div is="e-stack" data-gap="2xl">
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Searchable multiselect</h2>
+          <p is="e-p">
+            <span is="e-muted">Focus the search field to open the list. Selected items appear as chips. Press Escape to close.</span>
+          </p>
+          <form is="e-form" data-width="md" data-no-style onsubmit="event.preventDefault()">
+            <div is="e-stack" data-gap="md">
+              <label>
+                <template
+                  id="genres-multiselect"
+                  is="e-multiselect-dropdown"
+                  data-internal-state="${{
+                    values: ['Jazz', 'Rock', 'Classical', 'Electronic', 'Blues', 'Folk', 'Hip Hop', 'Country'],
+                    selectedValues: ['Jazz', 'Rock'],
+                    valueDisplayFunction: function (internalState, value) { return value }
+                  }}"
+                  data-name="genres"
+                  data-label="Select genres"
+                  data-selected-chip-close-icon="/images/close-dark.svg"
+                  data-no-results-on-search-message="No genres match your search"
+                >
+                  <template></template>
+                </template>
+              </label>
+              <div is="e-row" data-gap="md" data-keep-flex-direction-row-in-mobile>
+                <button
+                  id="btn-show-selection"
+                  data-primary type="button"
+                  onclick="
+                    const checked = [...document.querySelectorAll(`#genres-multiselect input[type='checkbox']:checked`)]
+                      .map(input => input.value)
+                    document.querySelector('e-toast').open(
+                      checked.length ? `Selected: ${checked.join(', ')}` : 'Nothing selected'
+                    )
+                  "
+                >Show selection</button>
+                <button
+                  data-primary
+                  data-fill="outlined"
+                  onclick="
+                    this.form.reset()
+                  "
+                  type="reset"
+                >
+                  Reset form
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Always-on list</h2>
+          <p is="e-p">
+            <span is="e-muted">Use </span>
+            <code is="e-code">data-always-on</code>
+            <span is="e-muted"> to keep checkboxes visible without a search-triggered dropdown.</span>
+          </p>
+          <form is="e-form" data-width="md" data-no-style onsubmit="event.preventDefault()">
+            <label>
+              <template
+                is="e-multiselect-dropdown"
+                data-always-on
+                data-internal-state="${{
+                  values: ['Dashboard', 'Calendar', 'Messages', 'Settings'],
+                  selectedValues: ['Dashboard'],
+                  valueDisplayFunction: function (internalState, value) { return value }
+                }}"
+                data-name="pages"
+                data-label="Visible pages"
+              >
+                <template></template>
+              </template>
+            </label>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

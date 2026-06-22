@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Forms &amp; Buttons</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#ehtml/main'
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+  </style>
+</head>
+<body>
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">Forms &amp; Buttons</h1>
+      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <div is="e-stack" data-gap="2xl">
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Buttons</h2>
+          <div is="e-row" data-gap="md" data-flex-wrap="wrap" data-keep-flex-direction-row-in-mobile>
+            <button data-primary>Solid primary</button>
+            <button data-primary data-fill="outlined">Outlined</button>
+            <button data-primary data-fill="danger">Danger</button>
+            <button data-primary disabled>Disabled</button>
+            <button is="e-with-icon" title="Icon button">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%233551A4' d='M8 1v14M1 8h14' stroke='%233551A4' stroke-width='2'/%3E%3C/svg%3E" alt="+">
+            </button>
+          </div>
+        </section>
+
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Links</h2>
+          <div is="e-row" data-gap="lg" data-flex-wrap="wrap" data-keep-flex-direction-row-in-mobile>
+            <a is="e-link" data-underlined href="#">Underlined link</a>
+            <a is="e-link-button" href="#">Link button</a>
+            <a is="e-link-button" data-variant="outline" href="#">Outline link button</a>
+          </div>
+        </section>
+
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Form</h2>
+          <form is="e-form" data-width="sm" onsubmit="event.preventDefault()">
+            <div is="e-stack" data-gap="md">
+              <label>
+                Email
+                <input type="email" name="email" placeholder="you@example.com" required>
+              </label>
+              <label>
+                Password
+                <input type="password" name="password" placeholder="••••••••" required>
+              </label>
+              <label data-flex-direction="row">
+                <input type="checkbox" name="remember">
+                Remember me
+              </label>
+              <label>
+                Role
+                <select name="role">
+                  <option>Student</option>
+                  <option>Instructor</option>
+                  <option>Admin</option>
+                </select>
+              </label>
+              <label>
+                Notes
+                <textarea name="notes" rows="3" placeholder="Optional message"></textarea>
+              </label>
+              <span is="e-helper">Helper text appears below fields.</span>
+              <button data-primary type="submit">Sign in</button>
+            </div>
+          </form>
+        </section>
+
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Tooltip</h2>
+          <p is="e-p">
+            Hover the badge:
+            <e-tooltip data-tip="Keyboard shortcut hint" data-direction="to-right">
+              <span is="e-badge">?</span>
+            </e-tooltip>
+          </p>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

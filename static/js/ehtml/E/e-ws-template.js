@@ -13,26 +13,26 @@ export default class EWs extends HTMLTemplateElement {
   connectedCallback() {
     this.addEventListener(
       'ehtml:activated',
-      this.onEHTMLActivated
+      this.#onEHTMLActivated
     )
   }
 
   disconnectedCallback() {
     this.removeEventListener(
       'ehtml:activated',
-      this.onEHTMLActivated
+      this.#onEHTMLActivated
     )
   }
 
-  onEHTMLActivated() {
+  #onEHTMLActivated() {
     if (this.ehtmlActivated) {
       return
     }
     this.ehtmlActivated = true
-    this.run()
+    this.#run()
   }
 
-  run() {
+  #run() {
     const state = getNodeScopedState(this)
 
     if (!this.hasAttribute('data-src')) {
@@ -94,7 +94,6 @@ export default class EWs extends HTMLTemplateElement {
         )
       }
 
-      // Replace <template is="e-ws"> with its content
       this.parentNode.replaceChild(
         this.content.cloneNode(true),
         this

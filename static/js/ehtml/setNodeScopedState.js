@@ -14,9 +14,7 @@ export default function setNodeScopedState(node, state) {
     typeof state === 'object' &&
     !Array.isArray(state)
 
-  const newState = Object.freeze(
-    canMerge ? { ...inheritedState, ...state } : state
-  )
+  const newState = canMerge ? { ...inheritedState, ...state } : state
 
   window.__EHTML_SCOPED_STATE__.set(node, newState)
 }
