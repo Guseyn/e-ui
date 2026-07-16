@@ -298,7 +298,7 @@ File inputs inside `e-form` pick up drag-and-drop styling automatically when gen
 
 ### User avatar
 
-Live demo: [forms-buttons.html](static/html/examples/chips-kbd.html) · Screenshot: [user-avatar.png](static/images/user-avatar.png)
+Live demo: [chips-kbd.html](static/html/examples/chips-kbd.html) · Screenshot: [user-avatar.png](static/images/user-avatar.png)
 
 Circular avatar with initials or background image. With EHTML, `data-text` is evaluated into the element on activation.
 
