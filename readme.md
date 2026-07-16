@@ -357,7 +357,7 @@ Live demo: [chips-kbd.html](static/html/examples/chips-kbd.html) · Screenshot: 
 
 ## Custom elements
 
-These require JS module imports (before `#ehtml/main`) and EHTML activation. Most expose `data-action`, `data-onopen`, or `data-onclose` strings evaluated by EHTML.
+These require JS module imports and EHTML activation. Most expose `data-action`, `data-onopen`, or `data-onclose` strings evaluated by EHTML.
 
 | Module | Element | Description |
 |--------|---------|-------------|
