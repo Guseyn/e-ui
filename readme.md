@@ -10,7 +10,7 @@ UI library for SaaS applications. **e-ui** provides a design system (CSS) and in
 
 ## Quick start
 
-**e-ui is designed to be used with [EHTML](https://e-html.org).** EHTML activates templates, binds data, and runs actions; e-ui components listen for EHTML's `ehtml:activated` event before initializing. Import e-ui modules **after** `#ehtml/main` so custom elements are registered when EHTML activates the page.
+**e-ui is designed to be used with [EHTML](https://e-html.org).** EHTML activates templates, binds data, and runs actions; e-ui components listen for EHTML's `ehtml:activated` event before initializing.
 
 ```html
 <!DOCTYPE html>
@@ -29,9 +29,9 @@ UI library for SaaS applications. **e-ui** provides a design system (CSS) and in
   }
   </script>
   <script type="module">
+    import '#ehtml/main'
     import '#e-ui/e-toast.js'
     import '#e-ui/e-dialog.js'
-    import '#ehtml/main'
   </script>
   <link rel="stylesheet" href="/css/e-ui.css">
 </head>
@@ -298,7 +298,7 @@ File inputs inside `e-form` pick up drag-and-drop styling automatically when gen
 
 ### User avatar
 
-Live demo: [forms-buttons.html](static/html/examples/chips-kbd.html) · Screenshot: [user-avatar.png](static/images/user-avatar.png)
+Live demo: [chips-kbd.html](static/html/examples/chips-kbd.html) · Screenshot: [user-avatar.png](static/images/user-avatar.png)
 
 Circular avatar with initials or background image. With EHTML, `data-text` is evaluated into the element on activation.
 
@@ -357,7 +357,7 @@ Live demo: [chips-kbd.html](static/html/examples/chips-kbd.html) · Screenshot: 
 
 ## Custom elements
 
-These require JS module imports (before `#ehtml/main`) and EHTML activation. Most expose `data-action`, `data-onopen`, or `data-onclose` strings evaluated by EHTML.
+These require JS module imports and EHTML activation. Most expose `data-action`, `data-onopen`, or `data-onclose` strings evaluated by EHTML.
 
 | Module | Element | Description |
 |--------|---------|-------------|
