@@ -1,8 +1,4 @@
-# Changelog
-
-## Unreleased
-
-### Accessibility
+# Release 1.0.1
 
 - **e-sidebar**: mobile menu button uses `aria-label`, `aria-expanded`, `aria-controls`; decorative menu icon marked `aria-hidden`
 - **e-dialog**: close control is a `<button>` with `aria-label="Close dialog"`; decorative close icon marked `aria-hidden`
