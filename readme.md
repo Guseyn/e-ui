@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/Guseyn/e-ui/master/static/images/logo.svg?sanitize=true">
 
-**v 1.0.1**
+**v 1.0.2**
 
 UI library for SaaS applications. **e-ui** provides a design system (CSS) and interactive custom elements (JavaScript) that work alongside [EHTML](https://e-html.org) — a declarative, no-build-step HTML framework.
 
