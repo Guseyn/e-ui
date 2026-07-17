@@ -71,20 +71,20 @@
       </header>
       <nav>
         <a href="/html/examples/sidebar-tabs.html?page=dashboard" data-selected="${urlParams.page === 'dashboard'}">
-          <img src="/images/dashboard.svg" alt="">
+          <img src="/images/dashboard.svg" alt="" aria-hidden="true">
           <span>Dashboard</span>
         </a>
         <a href="/html/examples/sidebar-tabs.html?page=calendar" data-selected="${urlParams.page === 'calendar'}">
-          <img src="/images/calendar.svg" alt="">
+          <img src="/images/calendar.svg" alt="" aria-hidden="true">
           <span>Calendar</span>
         </a>
         <a href="/html/examples/sidebar-tabs.html?page=users" data-selected="${urlParams.page === 'users'}">
-          <img src="/images/users.svg">
+          <img src="/images/users.svg" alt="" aria-hidden="true">
           <span>Users</span>
         </a>
         <hr is="e-divider">
         <a href="/html/index.html">
-          <img src="/images/exit.svg" alt="">
+          <img src="/images/exit.svg" alt="" aria-hidden="true">
           <span>Exit to Gallery</span>
         </a>
       </nav>
@@ -101,11 +101,12 @@
           <div is="e-spacer"></div>
           <button
             is="e-with-icon"
-            title="Toggle sidebar"
+            type="button"
+            aria-label="Toggle sidebar"
             data-hide-on-sidebar-closed
             onclick="const s = document.querySelector('e-sidebar'); s.getAttribute('data-state') === 'open' ? s.close() : s.open()"
           >
-            <img src="/images/collapse.svg" alt="">
+            <img src="/images/collapse.svg" alt="" aria-hidden="true">
           </button>
         </div>
       </footer>

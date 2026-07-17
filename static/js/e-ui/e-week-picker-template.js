@@ -44,11 +44,15 @@ function initializeWeekPicker (node) {
 
   // Prev Week Button
   const prevWeekButton = document.createElement('button')
+  prevWeekButton.type = 'button'
   prevWeekButton.setAttribute('is', 'e-with-icon')
   prevWeekButton.setAttribute('data-padding', 'xs')
+  prevWeekButton.setAttribute('aria-label', 'Previous week')
   const prevWeekButtonIcon = document.createElement('img')
   prevWeekButtonIcon.src = node.getAttribute('data-prev-icon')
   prevWeekButtonIcon.setAttribute('data-width', '2xs')
+  prevWeekButtonIcon.alt = ''
+  prevWeekButtonIcon.setAttribute('aria-hidden', 'true')
   prevWeekButton.appendChild(prevWeekButtonIcon)
   weekPickerBox.appendChild(prevWeekButton)
 
@@ -61,11 +65,15 @@ function initializeWeekPicker (node) {
 
   // Next Week Button
   const nextWeekButton = document.createElement('button')
+  nextWeekButton.type = 'button'
   nextWeekButton.setAttribute('is', 'e-with-icon')
   nextWeekButton.setAttribute('data-padding', 'xs')
+  nextWeekButton.setAttribute('aria-label', 'Next week')
   const nextWeekButtonIcon = document.createElement('img')
   nextWeekButtonIcon.src = node.getAttribute('data-next-icon')
   nextWeekButtonIcon.setAttribute('data-width', '2xs')
+  nextWeekButtonIcon.alt = ''
+  nextWeekButtonIcon.setAttribute('aria-hidden', 'true')
   nextWeekButton.appendChild(nextWeekButtonIcon)
   weekPickerBox.appendChild(nextWeekButton)
 

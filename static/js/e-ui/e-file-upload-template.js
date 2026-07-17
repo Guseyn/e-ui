@@ -1,3 +1,6 @@
+import getNodeScopedState from '#ehtml/getNodeScopedState.js'
+import evaluateActions from '#ehtml/evaluateActions.js'
+
 class EFileUploadTemplate extends HTMLTemplateElement {
   constructor() {
     super()
@@ -52,6 +55,8 @@ function initializeFileUpload(node) {
   fileInputField.setAttribute('accept', accept)
   const fileInputIcon = document.createElement('img')
   fileInputIcon.src = node.getAttribute('data-icon-src')
+  fileInputIcon.alt = ''
+  fileInputIcon.setAttribute('aria-hidden', 'true')
 
   if (node.hasAttribute('data-action-text')) {
     const actionSpan = document.createElement('span')
@@ -86,6 +91,55 @@ function initializeFileUpload(node) {
 
   const maxSizeInMb = node.getAttribute('data-max-size-in-mb') * 1
 
+  function runFileLoadStart(fileName) {
+    if (node.hasAttribute('data-actions-on-file-load-start')) {
+      evaluateActions(
+        node.getAttribute('data-actions-on-file-load-start'),
+        node,
+        {
+          fileName,
+          ...getNodeScopedState(node)
+        }
+      )
+    }
+  }
+
+  function runFileLoadEnd(fileName) {
+    if (node.hasAttribute('data-actions-on-file-load-end')) {
+      evaluateActions(
+        node.getAttribute('data-actions-on-file-load-end'),
+        node,
+        {
+          fileName,
+          ...getNodeScopedState(node)
+        }
+      )
+    }
+  }
+
+  function runFileLoadProgress(percentage, fileName) {
+    if (node.hasAttribute('data-actions-on-file-load-progress')) {
+      const action = node.getAttribute('data-actions-on-file-load-progress')
+      evaluateActions(
+        action,
+        node,
+        {
+          percentage,
+          fileName,
+          ...getNodeScopedState(node)
+        }
+      )
+    }
+  }
+
+  async function loadFilesFromList(files) {
+    for (const [index, file] of files.entries()) {
+      runFileLoadStart(file.name)
+      await loadFile(file, maxSizeInMb, index > 0)
+      runFileLoadEnd(file.name)
+    }
+  }
+
   fileInputField.addEventListener('change', async (e) => {
     if (node.hasAttribute('multiple')) {
       const files = [...e.target.files]
@@ -103,16 +157,12 @@ function initializeFileUpload(node) {
           return
         }
       }
-      for (const [index, file] of files.entries()) {
-        if (index > 0) {
-          await loadFile(file, maxSizeInMb, true)
-        } else {
-          await loadFile(file, maxSizeInMb)
-        }
-      }
+      await loadFilesFromList(files)
     } else {
       const file = e.target.files[0]
+      runFileLoadStart(file.name)
       await loadFile(file, maxSizeInMb)
+      runFileLoadEnd(file.name)
     }
   })
 
@@ -165,16 +215,12 @@ function initializeFileUpload(node) {
           return
         }
       }
-      for (const [index, file] of files) {
-        if (index > 0) {
-          await loadFile(file, maxSizeInMb, true)
-        } else {
-          await loadFile(file, maxSizeInMb)
-        }
-      }
+      await loadFilesFromList(files)
     } else {
       const file = e.dataTransfer.files[0]
+      runFileLoadStart(file.name)
       await loadFile(file, maxSizeInMb)
+      runFileLoadEnd(file.name)
     }
   })
 
@@ -212,6 +258,15 @@ function initializeFileUpload(node) {
 
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
+      reader.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentage = Math.min(
+            100,
+            Math.max(0, Math.round((event.loaded / event.total) * 100))
+          )
+          runFileLoadProgress(percentage, file.name)
+        }
+      }
       reader.onload = (e) => {
         try {
           const fileNameSpanFromPrevSelection = label.querySelector('b[data-name="file-names"]')
@@ -237,6 +292,9 @@ function initializeFileUpload(node) {
         } catch (err) {
           reject(err)
         }
+      }
+      reader.onerror = () => {
+        reject(reader.error)
       }
       reader.readAsDataURL(file)
     })

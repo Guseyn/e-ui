@@ -1714,6 +1714,18 @@ div[is="e-user-avatar"] {
   font-size: var(--e-font-size-lg);
 }
 
+div[is="e-user-avatar"][data-focusable]:focus-visible {
+  outline: 2px solid var(--e-primary);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+img[role="button"][data-focusable]:focus-visible {
+  outline: 2px solid var(--e-primary);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
 div[data-generated-by-e-dropdown-multiselect-template] {
   position: relative;
   width: 100%;
@@ -2821,6 +2833,8 @@ dialog[is="e-dialog"] [is="e-close-icon"] {
   width: var(--e-img-xs);
   height: var(--e-img-xs);
   box-sizing: border-box;
+  padding: 0;
+  font: inherit;
   background-color: var(--e-surface-bg);
   border-radius: var(--e-radius-lg);
   border: 1px solid var(--e-border);

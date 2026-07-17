@@ -32,6 +32,8 @@ class EToast extends HTMLElement {
     if (iconSrc) {
       const img = document.createElement('img')
       img.src = iconSrc
+      img.alt = ''
+      img.setAttribute('aria-hidden', 'true')
       this.appendChild(img)
     }
 
@@ -42,8 +44,11 @@ class EToast extends HTMLElement {
     if (closeSrc) {
       const btn = document.createElement('button')
       btn.type = 'button'
+      btn.setAttribute('aria-label', 'Close notification')
       const closeImg = document.createElement('img')
       closeImg.src = closeSrc
+      closeImg.alt = ''
+      closeImg.setAttribute('aria-hidden', 'true')
       btn.appendChild(closeImg)
       btn.onclick = () => this.close()
       this.appendChild(btn)
@@ -51,6 +56,9 @@ class EToast extends HTMLElement {
   }
 
   #closeOthers() {
+    if (this.hasAttribute('data-dont-close-others')) {
+      return
+    }
     // Find any toast currently in the 'opening' state and close it
     document.querySelectorAll('e-toast[data-state="opening"]').forEach(toast => {
       if (toast !== this) {

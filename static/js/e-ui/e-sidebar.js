@@ -59,11 +59,20 @@ class ESidebar extends HTMLElement {
       const btn = document.createElement('button')
       btn.setAttribute('is', 'e-with-icon')
       btn.setAttribute('data-corner', corner)
-      btn.innerHTML = `<img src="${iconUrl}" width="24">`
+      btn.type = 'button'
+      btn.setAttribute('aria-label', 'Open navigation menu')
+      btn.setAttribute('aria-expanded', 'false')
+      btn.setAttribute('aria-controls', 'e-sidebar-nav')
+      btn.innerHTML = `<img src="${iconUrl}" width="24" alt="" aria-hidden="true">`
       
       btn.onclick = (e) => {
         e.stopPropagation()
         this.getAttribute('data-state') === 'open' ? this.close() : this.open()
+      }
+
+      const nav = this.querySelector('nav')
+      if (nav && !nav.id) {
+        nav.id = 'e-sidebar-nav'
       }
 
       if (this.getAttribute('data-side') === 'left') {
@@ -71,6 +80,8 @@ class ESidebar extends HTMLElement {
       } else {
         mobileHeader.appendChild(btn)
       }
+
+      this.#updateMobileMenuButton(this.getAttribute('data-state') === 'open')
 
       if (this.hasAttribute('data-mobile-body-overlay')) {
         const mobileBodyOverlay = document.querySelector(
@@ -125,13 +136,32 @@ class ESidebar extends HTMLElement {
   open() {
     this.setAttribute('data-state', 'open')
     sessionStorage.setItem('e-sidebar-open', 'true')
+    this.#updateMobileMenuButton(true)
     this.#adjustPaddingOfNav()
   }
 
   close() {
     this.setAttribute('data-state', 'closed')
     sessionStorage.removeItem('e-sidebar-open')
+    this.#updateMobileMenuButton(false)
     this.#adjustPaddingOfNav()
+  }
+
+  #updateMobileMenuButton(isOpen) {
+    const mobileHeaderSelector = this.getAttribute('data-mobile-header')
+    if (!mobileHeaderSelector) {
+      return
+    }
+    const mobileHeader = document.querySelector(mobileHeaderSelector)
+    const btn = mobileHeader?.querySelector('button[is="e-with-icon"]')
+    if (!btn) {
+      return
+    }
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false')
+    btn.setAttribute(
+      'aria-label',
+      isOpen ? 'Close navigation menu' : 'Open navigation menu'
+    )
   }
 }
 

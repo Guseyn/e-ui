@@ -28,12 +28,14 @@ class EDialog extends HTMLDialogElement {
     
     // Create close button
     if (this.hasAttribute('data-close-icon')) {
-      const closeBtn = document.createElement('div')
+      const closeBtn = document.createElement('button')
+      closeBtn.type = 'button'
       closeBtn.setAttribute('is', 'e-close-icon')
+      closeBtn.setAttribute('aria-label', 'Close dialog')
       
       const iconUrl = this.getAttribute('data-close-icon')
       if (iconUrl) {
-        closeBtn.innerHTML = `<img src="${iconUrl}">`
+        closeBtn.innerHTML = `<img src="${iconUrl}" alt="" aria-hidden="true">`
       }
 
       closeBtn.onclick = () => this.close()
@@ -69,14 +71,6 @@ class EDialog extends HTMLDialogElement {
         this.close()
       }
     })
-
-    const isTrueWebKit = /AppleWebKit/i.test(navigator.userAgent) && 
-                         !/Chrome/i.test(navigator.userAgent) && 
-                         !/Chromium/i.test(navigator.userAgent)
-
-    if (isTrueWebKit) {
-      // this.style.height = 'auto'
-    }  
   }
 
   showModal() {
