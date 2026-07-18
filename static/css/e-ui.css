@@ -1726,6 +1726,11 @@ img[role="button"][data-focusable]:focus-visible {
   border-radius: 50%;
 }
 
+form[is="e-form"] label:has(input[type="file"])[data-focusable]:focus-visible {
+  outline: 2px solid var(--e-primary);
+  outline-offset: 2px;
+}
+
 div[data-generated-by-e-dropdown-multiselect-template] {
   position: relative;
   width: 100%;

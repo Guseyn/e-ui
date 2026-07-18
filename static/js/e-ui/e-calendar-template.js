@@ -295,7 +295,6 @@ function initializeCalendar(node) {
       div[data-part="event"]:hover,
       div[data-part="event"]:focus-visible {
         --color: #000;
-        transform: scale(1.25);
         background: color-mix(in srgb, var(--color), transparent 10%);
         color: #fff;
         flex-direction: column;
@@ -304,9 +303,6 @@ function initializeCalendar(node) {
         line-height: 0.2rem;
         font-size: var(--e-font-size-xs);
         justify-content: center;
-        width: calc(100% - var(--e-spacing-sm));
-        left: 50%;
-        transform: translateX(-50%);
         min-height: max-content !important;
         min-width: max-content !important;
         padding: var(--e-spacing-md);
@@ -535,8 +531,22 @@ function initializeCalendar(node) {
       event.innerHTML = label
     }
 
-    event.addEventListener('mouseenter', showExpandedLabel)
-    event.addEventListener('mouseleave', showCompactLabel)
+    let compactLabelTimer
+
+    function cancelCompactLabel() {
+      clearTimeout(compactLabelTimer)
+    }
+
+    function scheduleCompactLabel() {
+      cancelCompactLabel()
+      compactLabelTimer = setTimeout(showCompactLabel, 200)
+    }
+
+    event.addEventListener('mouseenter', () => {
+      cancelCompactLabel()
+      showExpandedLabel()
+    })
+    event.addEventListener('mouseleave', scheduleCompactLabel)
 
     const lessonDetails = {
       lessonId,
@@ -576,7 +586,14 @@ function initializeCalendar(node) {
         )
       }
 
-      event.addEventListener('click', openEvent)
+      event.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) {
+          return
+        }
+        cancelCompactLabel()
+        e.preventDefault()
+        openEvent(e)
+      })
 
       event.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -585,7 +602,9 @@ function initializeCalendar(node) {
         }
       })
 
-      event.addEventListener('focus', showExpandedLabel)
+      event.addEventListener('focus', () => {
+        setTimeout(showExpandedLabel, 0)
+      })
       event.addEventListener('blur', showCompactLabel)
     }
 

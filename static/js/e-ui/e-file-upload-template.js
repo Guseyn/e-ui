@@ -26,6 +26,42 @@ class EFileUploadTemplate extends HTMLTemplateElement {
 
 customElements.define('e-file-upload', EFileUploadTemplate, { extends: 'template' })
 
+function buildFileUploadAccessibleName(node) {
+  const parts = []
+  if (node.hasAttribute('data-label-text')) {
+    parts.push(node.getAttribute('data-label-text'))
+  }
+  if (node.hasAttribute('data-action-text')) {
+    parts.push(node.getAttribute('data-action-text'))
+  }
+  if (node.hasAttribute('data-details-text')) {
+    parts.push(node.getAttribute('data-details-text'))
+  }
+  if (node.hasAttribute('data-required')) {
+    parts.push('Required')
+  }
+  return parts.join('. ') || 'Choose file'
+}
+
+function bindAccessibleFileUploadLabel(label, fileInputField, node) {
+  label.setAttribute('data-focusable', '')
+  label.tabIndex = 0
+  label.setAttribute('aria-label', buildFileUploadAccessibleName(node))
+
+  fileInputField.tabIndex = -1
+
+  if (node.hasAttribute('data-required')) {
+    fileInputField.setAttribute('aria-required', 'true')
+  }
+
+  label.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      fileInputField.click()
+    }
+  })
+}
+
 function initializeFileUpload(node) {
   const label = document.createElement('label')
   if (node.hasAttribute('data-label-text')) {
@@ -72,6 +108,8 @@ function initializeFileUpload(node) {
   
   label.appendChild(fileInputField)
   label.appendChild(fileInputIcon)
+
+  bindAccessibleFileUploadLabel(label, fileInputField, node)
 
   if (node.internalState && node.internalState['preuploadedFiles']) {
     const fileNameSpan = document.createElement('b')
