@@ -33,7 +33,12 @@ Please import it as shown below:
 
 customElements.define('e-multiselect-dropdown', MultiselectDropdown, { extends: 'template' })
 
+function getFieldLabel(node) {
+  return (node.getAttribute('data-label') || 'options').trim()
+}
+
 function initializeMultiselect (node) {
+  const fieldLabel = getFieldLabel(node)
   const multiSelect = document.createElement('div')
   multiSelect.setAttribute('is', 'e-stack')
   multiSelect.setAttribute('data-generated-by-e-dropdown-multiselect-template', '')
@@ -47,6 +52,8 @@ function initializeMultiselect (node) {
     listOfSelectedElements = document.createElement('div')
     listOfSelectedElements.setAttribute('is', 'e-row')
     listOfSelectedElements.setAttribute('data-keep-flex-direction-row-in-mobile', '')
+    listOfSelectedElements.setAttribute('role', 'list')
+    listOfSelectedElements.setAttribute('aria-label', `Selected ${fieldLabel}`)
   }
   const searchLabel = document.createElement('label')
   const searchLabelText = document.createElement('span')
@@ -61,6 +68,18 @@ function initializeMultiselect (node) {
   searchInput.setAttribute('name', 'search')
   searchInput.setAttribute('autocomplete', 'off')
   searchInput.setAttribute('data-ignore', 'true')
+  searchInput.setAttribute('aria-label', `Search ${fieldLabel}`)
+  searchInput.setAttribute('aria-autocomplete', 'list')
+  searchInput.setAttribute('aria-expanded', 'false')
+  searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && searchInput.getAttribute('aria-expanded') === 'true') {
+      event.preventDefault()
+      event.stopPropagation()
+      setDropdownOpen(false)
+      searchInput.blur()
+    }
+  })
+
 
   searchLabel.appendChild(searchInput)
 
@@ -75,14 +94,32 @@ function initializeMultiselect (node) {
   const dropdown = document.createElement('e-scrollable')
   dropdown.style.display = 'none'
   const name = node.getAttribute('data-name')
+  const dropdownId = multiSelectId
+    ? `${multiSelectId}-options`
+    : `multiselect-${name || 'dropdown'}-options`
+  dropdown.id = dropdownId
+  dropdown.setAttribute('role', 'group')
+  dropdown.setAttribute('aria-label', `${fieldLabel} options`)
+  searchInput.setAttribute('aria-controls', dropdownId)
+
+  function setDropdownOpen(isOpen) {
+    dropdown.style.display = isOpen ? '' : 'none'
+    searchInput.setAttribute('aria-expanded', String(isOpen))
+  }
+
   if (!multiSelectIsAlwaysOn) {
     const closeLinkBox = document.createElement('div')
     closeLinkBox.setAttribute('is', 'e-stack')
     closeLinkBox.setAttribute('data-elm', 'close-link')
-    const closeLink = document.createElement('span')
+    const closeLink = document.createElement('button')
+    closeLink.type = 'button'
+    closeLink.setAttribute('aria-label', 'Close')
+    closeLink.setAttribute('data-focusable', '')
+    closeLink.tabIndex = 0
+    closeLink.setAttribute('data-click-on-enter', '')
     closeLink.addEventListener('click', (e) => {
       e.preventDefault()
-      dropdown.style.display = 'none'
+      setDropdownOpen(false)
       searchInput.blur()
       return false
     })
@@ -91,15 +128,13 @@ function initializeMultiselect (node) {
     const kbd = new (node.ekbd)()
     kbd.setAttribute('is', 'e-kbd')
     kbd.setAttribute('data-trigger-in-inputs', 'true')
-    kbd.setAttribute('data-action', /*js*/`
-      document.querySelector('[data-elm="close-link"] > span').click()
-    `)
     kbd.innerHTML = 'escape'
     closeLinkBox.appendChild(kbd)
     dropdown.appendChild(closeLinkBox)
   } else {
     dropdown.style.display = ''
     dropdown.setAttribute('data-always-on', '')
+    searchInput.setAttribute('aria-expanded', 'true')
   }
   const allLabels = []
   const labelColumn = document.createElement('div')
@@ -141,6 +176,8 @@ function initializeMultiselect (node) {
   notFoundLabel.style.display = 'none'
   notFoundLabel.setAttribute('data-padding', 'md')
   notFoundLabel.setAttribute('data-font-size', 'md')
+  notFoundLabel.setAttribute('role', 'status')
+  notFoundLabel.setAttribute('aria-live', 'polite')
   dropdown.appendChild(notFoundLabel)
   multiSelect.appendChild(dropdown)
 
@@ -152,8 +189,8 @@ function initializeMultiselect (node) {
     filterOptions(event.target.value, allLabels)
   })
 
-  searchInput.addEventListener('focus', (event) => {
-    dropdown.style.display = ''
+  searchInput.addEventListener('focus', () => {
+    setDropdownOpen(true)
   })
 
   node.parentNode.replaceChild(
@@ -179,13 +216,11 @@ function initializeMultiselect (node) {
     }
   }
 
-  if (listOfSelectedElements) {
-    const form = listOfSelectedElements.closest('form')
-    if (form) {
-      form.addEventListener('reset', () => {
-        listOfSelectedElements.innerHTML = ''
-      })
-    }
+  const form = listOfSelectedElements.closest('form')
+  if (form) {
+    form.addEventListener('reset', () => {
+      listOfSelectedElements.innerHTML = ''
+    })
   }
 
   function updateListOfSelectedElements(allLabels, listOfSelectedElements) {
@@ -200,18 +235,29 @@ function initializeMultiselect (node) {
         const chip = document.createElement('span')
         chip.setAttribute('is', 'e-chip')
         chip.setAttribute('data-font-size', 'xs')
+        chip.setAttribute('role', 'listitem')
         chip.innerText = label.textContent
         if (node.hasAttribute('data-selected-chip-close-icon')) {
+          const chipText = label.textContent.trim()
+          const removeBtn = document.createElement('button')
+          removeBtn.type = 'button'
+          removeBtn.setAttribute('aria-label', `Remove ${chipText}`)
+          removeBtn.setAttribute('data-focusable', '')
+          removeBtn.tabIndex = 0
+          removeBtn.setAttribute('data-click-on-enter', '')
           const img = document.createElement('img')
           img.src = node.getAttribute('data-selected-chip-close-icon')
-          img.addEventListener('click', (event) => {
+          img.alt = ''
+          img.setAttribute('aria-hidden', 'true')
+          removeBtn.appendChild(img)
+          removeBtn.addEventListener('click', (event) => {
             event.preventDefault()
             checkbox.checked = false
             if (!multiSelectIsAlwaysOn) {
               updateListOfSelectedElements(allLabels, listOfSelectedElements)
             }
           })
-          chip.appendChild(img)
+          chip.appendChild(removeBtn)
         }
         listOfSelectedElements.appendChild(chip)
         allSelectedValues.push(label.textContent)

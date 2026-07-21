@@ -41,7 +41,7 @@ class ETabs extends HTMLElement {
       return
     }
     this.ehtmlActivated = true
-    window.addEventListener("hashchange", () => {
+    window.addEventListener('hashchange', () => {
       const tabIndexByUrlHash = this.#hashToTabIndex()
       this.selectTab(tabIndexByUrlHash)
     })
