@@ -1,4 +1,4 @@
-# Release 1.0.6
+# Release 1.0.7
 
-98c7eaf update version in package.json to 1.0.6 (guseyn, Sun Jul 19 01:44:06 2026 +0400)
-165f0d6 add important to more varialble utility css (guseyn, Sun Jul 19 01:44:00 2026 +0400)
+1cd389a update version in package.json to 1.0.7 (guseyn, Tue Jul 21 19:09:48 2026 +0400)
+9b98ba9 add more accessibility (guseyn, Tue Jul 21 19:09:30 2026 +0400)
