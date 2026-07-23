@@ -428,7 +428,7 @@ Screenshot: [dialog.png](static/images/dialog.png)
 
 ### `e-confirm`
 
-Live demo: [sidebar-tabs.html](static/html/examples/confirm.html) · Screenshot: [sidebar.png](static/images/confirm.png)
+Live demo: [confirm.html](static/html/examples/confirm.html) · Screenshot: [confirm.png](static/images/confirm.png)
 
 Promise-based confirmation dialog built on `e-dialog`. Place one `<e-confirm>` in the page and call `.call()` whenever you need a yes/no decision.
 
