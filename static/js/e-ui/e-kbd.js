@@ -49,6 +49,7 @@ export default class EKbd extends HTMLElement {
       alt: parts.includes('alt') || parts.includes('option'),
       meta: parts.includes('meta') || parts.includes('cmd') || parts.includes('⌘') || parts.includes('command') || parts.includes('win'),
       key: (k) => {
+        if (k === ' ' && parts.includes('space')) return true
         return parts.includes(k)
       }
     }

@@ -6,7 +6,7 @@ UI library for SaaS applications. **e-ui** provides a design system (CSS) and in
 
 - **CSS:** `static/css/e-ui.css` — design tokens, utilities, typography, layout, forms, and component styles
 - **JS:** `static/js/e-ui/` — custom elements and EHTML template extensions
-- **Examples:** `static/html/` — runnable demo pages (start the dev server with `npm run server`)
+- **Examples:** `static/html/` — runnable demo pages (start the dev server with `npm start`)
 
 ## Quick start
 
@@ -32,6 +32,7 @@ UI library for SaaS applications. **e-ui** provides a design system (CSS) and in
     import '#ehtml/main'
     import '#e-ui/e-toast.js'
     import '#e-ui/e-dialog.js'
+    import '#e-ui/e-confirm.js'
   </script>
   <link rel="stylesheet" href="/css/e-ui.css">
 </head>
@@ -42,7 +43,7 @@ UI library for SaaS applications. **e-ui** provides a design system (CSS) and in
 ```
 
 ```bash
-npm run server
+npm start
 ```
 
 Open [http://localhost:8004/html/index.html](http://localhost:8004/html/index.html) for the example gallery.
@@ -147,7 +148,7 @@ Use `is="e-h"` on any heading level. Size comes from the tag (`h1`–`h6`).
 ### Inline code and highlight
 
 ```html
-<p is="e-p">Run <code is="e-code">npm run server</code> locally.</p>
+<p is="e-p">Run <code is="e-code">npm start</code> locally.</p>
 <p is="e-p">Search for <mark is="e-mark">keyword</mark> in results.</p>
 ```
 
@@ -363,6 +364,7 @@ These require JS module imports and EHTML activation. Most expose `data-action`,
 |--------|---------|-------------|
 | `e-toast.js` | `<e-toast>` | Toast notifications |
 | `e-dialog.js` | `dialog[is="e-dialog"]` | Modal dialogs |
+| `e-confirm.js` | `<e-confirm>` | Promise-based confirm dialog |
 | `e-sidebar.js` | `<e-sidebar>` | App sidebar |
 | `e-tab.js` | `<e-tabs>`, `<e-tab>` | Tab navigation |
 | `e-kbd.js` | `kbd[is="e-kbd"]` | Keyboard shortcuts via `data-action` |
@@ -423,6 +425,70 @@ Screenshot: [dialog.png](static/images/dialog.png)
 | `data-open-on-load` | Open when activated |
 | `data-onopen`, `data-onclose` | EHTML action strings |
 | `data-size` | `small`, `normal`, `large`, `full` |
+
+### `e-confirm`
+
+Live demo: [sidebar-tabs.html](static/html/examples/confirm.html) · Screenshot: [sidebar.png](static/images/confirm.png)
+
+Promise-based confirmation dialog built on `e-dialog`. Place one `<e-confirm>` in the page and call `.call()` whenever you need a yes/no decision.
+
+> Requires `e-dialog.js` to be imported (in addition to `e-confirm.js`).
+
+```html
+<script type="module">
+  import '#e-ui/e-dialog.js'
+  import '#e-ui/e-confirm.js'
+  import '#ehtml/main'
+</script>
+
+<e-confirm id="confirm"></e-confirm>
+```
+
+```javascript
+const confirmed = await document.querySelector('#confirm').call(
+  'Delete this item? This cannot be undone.',
+  'Delete',
+  'Keep'
+)
+
+if (confirmed) {
+  // user pressed Confirm
+} else {
+  // user pressed Cancel, Escape, or a newer call superseded this one
+}
+```
+
+**API:** `.call(message, confirmText = 'Confirm', cancelText = 'Cancel')` → `Promise<boolean>`
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `message` | — | Body text shown in the dialog (`white-space: pre-wrap`) |
+| `confirmText` | `'Confirm'` | Label for the danger (confirm) button |
+| `cancelText` | `'Cancel'` | Label for the outlined cancel button |
+
+**Behavior:**
+- Opens a small `e-dialog` with `data-no-backdrop-close` (backdrop click does not dismiss)
+- Resolves `true` when Confirm is clicked, `false` when Cancel is clicked or the dialog is otherwise closed (e.g. Escape)
+- If `.call()` is invoked while a previous call is still open, the previous promise resolves to `false` and the new message is shown
+- The host element uses `display: contents` so it does not affect layout
+
+Example in `onclick` event:
+
+```html
+onclick="
+  (async () => {
+    const confirmed = await document.querySelector('#confirm').call(
+      'Delete this item? This cannot be undone.',
+      'Delete',
+      'Keep'
+    )
+    if (!confirmed) {
+      return
+    }
+    this.form.submit(this)
+  })()
+"
+```
 
 ### `e-sidebar`
 
@@ -572,7 +638,7 @@ Add `data-always-on` to keep the checkbox list visible without a search-triggere
 
 ```bash
 # Start static file server
-npm run server
+npm start
 
 # Sync EHTML source from sibling repo
 npm run ehtml:update

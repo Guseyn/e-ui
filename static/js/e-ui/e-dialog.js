@@ -1,7 +1,7 @@
 import evaluateActions from '#ehtml/evaluateActions.js'
 import getNodeScopedState from '#ehtml/getNodeScopedState.js'
 
-class EDialog extends HTMLDialogElement {
+export class EDialog extends HTMLDialogElement {
   #wrapper
 
   constructor() {
@@ -48,9 +48,9 @@ class EDialog extends HTMLDialogElement {
     }
     this.appendChild(this.#wrapper)
 
-    // Close on backdrop click
+    // Close on backdrop click (opt out via data-no-backdrop-close)
     this.addEventListener('click', (e) => {
-      if (e.target === this) {
+      if (e.target === this && !this.hasAttribute('data-no-backdrop-close')) {
         this.close()
       }
     })
@@ -66,7 +66,12 @@ class EDialog extends HTMLDialogElement {
     }
 
     window.addEventListener('keydown', (event) => {
-      if (this.open && event.key && event.key.toLowerCase() === 'escape') {
+      if (
+        this.open &&
+        event.key &&
+        event.key.toLowerCase() === 'escape' &&
+        !this.hasAttribute('data-keep-open-on-escape')
+      ) {
         event.preventDefault()
         this.close()
       }

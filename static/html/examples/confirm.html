@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Confirm</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import '#e-ui/e-dialog.js'
+    import '#e-ui/e-confirm.js'
+    import '#e-ui/e-toast.js'
+    import '#ehtml/main'
+
+    const confirm = document.querySelector('#confirm')
+    const toast = document.querySelector('#toast')
+    const lastResult = document.querySelector('#last-result')
+
+    function showResult(confirmed) {
+      lastResult.textContent = confirmed ? 'Confirmed' : 'Cancelled'
+      toast.open(confirmed ? 'Action confirmed.' : 'Action cancelled.')
+    }
+
+    document.querySelector('#btn-default').addEventListener('click', async () => {
+      const confirmed = await confirm.call('Are you sure you want to continue?')
+      showResult(confirmed)
+    })
+
+    document.querySelector('#btn-delete').addEventListener('click', async () => {
+      const confirmed = await confirm.call(
+        'Delete this item?\nThis cannot be undone.',
+        'Delete',
+        'Keep'
+      )
+      showResult(confirmed)
+    })
+
+    document.querySelector('#btn-custom').addEventListener('click', async () => {
+      const confirmed = await confirm.call(
+        'Publish changes to production?',
+        'Publish',
+        'Not now'
+      )
+      showResult(confirmed)
+    })
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+  </style>
+</head>
+<body>
+  <e-confirm id="confirm"></e-confirm>
+  <e-toast
+    id="toast"
+    data-type="info"
+    data-position="top-right"
+    data-hide-after-n-seconds="3"
+    data-close-icon="/images/close-light.svg"
+  ></e-toast>
+
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">Confirm</h1>
+      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <div is="e-stack" data-gap="2xl">
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Promise-based confirm</h2>
+          <p is="e-p">
+            <span is="e-muted">
+              <code is="e-code">e-confirm</code> wraps a small
+              <code is="e-code">e-dialog</code> and returns a boolean via
+              <code is="e-code">.call()</code>. Backdrop clicks do not close it.
+            </span>
+          </p>
+          <div is="e-row" data-gap="md" data-flex-wrap="wrap" data-keep-flex-direction-row-in-mobile>
+            <button id="btn-default" data-primary>Default labels</button>
+            <button id="btn-delete" data-primary data-fill="danger">Delete item</button>
+            <button id="btn-custom" data-primary data-fill="outlined">Custom labels</button>
+          </div>
+          <p is="e-p">
+            <span is="e-muted">Last result:</span>
+            <strong id="last-result">—</strong>
+          </p>
+        </section>
+
+        <section is="e-stack" data-gap="md">
+          <h2 is="e-h">Usage</h2>
+          <p is="e-p">
+            <span is="e-muted">
+              Import <code is="e-code">e-dialog.js</code> and
+              <code is="e-code">e-confirm.js</code>, place
+              <code is="e-code">&lt;e-confirm&gt;</code> once, then
+              <code is="e-code">await confirm.call(message, confirmText?, cancelText?)</code>.
+              Resolves to <code is="e-code">true</code> or <code is="e-code">false</code>.
+            </span>
+          </p>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

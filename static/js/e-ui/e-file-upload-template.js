@@ -1,4 +1,4 @@
-import getNodeScopedState from '#ehtml/getNodeScopedState.js'
+import getNodeScopedState from '#ehtml/getNodeScopedState.js?v=41ab2bfa'
 import evaluateActions from '#ehtml/evaluateActions.js'
 
 class EFileUploadTemplate extends HTMLTemplateElement {
