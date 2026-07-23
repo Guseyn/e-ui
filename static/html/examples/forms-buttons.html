@@ -14,6 +14,7 @@
   }
   </script>
   <script type="module">
+    import '#e-ui/example-primary-picker.js'
     import '#ehtml/main'
   </script>
   <link rel="stylesheet" href="/css/e-ui.css">
@@ -27,7 +28,10 @@
   <div is="e-stack" data-gap="2xl" data-padding="2xl">
     <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
       <h1 is="e-h">Forms &amp; Buttons</h1>
-      <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+      <div is="e-stack" data-gap="sm" data-align-items="flex-end">
+        <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary">
+        <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+      </div>
     </div>
 
     <main is="e-main" data-centralized>
