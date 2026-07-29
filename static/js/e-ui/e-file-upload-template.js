@@ -1,4 +1,4 @@
-import getNodeScopedState from '#ehtml/getNodeScopedState.js'
+import getNodeScopedState from '#ehtml/getNodeScopedState.js?v=41ab2bfa'
 import evaluateActions from '#ehtml/evaluateActions.js'
 
 class EFileUploadTemplate extends HTMLTemplateElement {
@@ -121,14 +121,6 @@ function initializeFileUpload(node) {
   label.appendChild(fileInputIcon)
 
   bindAccessibleFileUploadLabel(label, fileInputField, node)
-
-  if (node.internalState && node.internalState['preuploadedFiles']) {
-    const fileNameSpan = document.createElement('b')
-    if (preuploadedFiles.length > 0) {
-      fileNameSpan.innerHTML = preuploadedFiles.map(file => `<a href="${file.url}${queryForPreuploadedFiles}">${file.filename}</a>`).join('<br>')
-      label.appendChild(fileNameSpan)
-    }
-  }
 
   if (node.hasAttribute('multiple')) {
     fileInputField.setAttribute('multiple', 'true')
@@ -283,16 +275,8 @@ function initializeFileUpload(node) {
 
   if (fileInputField.form) {
     fileInputField.form.addEventListener('reset', () => {
-      if (node.internalState && node.internalState['preuploadedFiles']) {
-        const fileNameSpan = document.createElement('b')
-        if (preuploadedFiles.length > 0) {
-          fileNameSpan.innerHTML = preuploadedFiles.map(file => `<a href="${file.url}${queryForPreuploadedFiles}">${file.filename}</a>`).join('<br>')
-          label.appendChild(fileNameSpan)
-        }
-      } else {
-        clearFileNames()
-        restoreDefaultIcon()
-      }
+      clearFileNames()
+      restoreDefaultIcon()
     })
   }
 
