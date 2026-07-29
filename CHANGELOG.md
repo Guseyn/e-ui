@@ -1,5 +1,6 @@
-# Release 1.0.8
+# Release 1.0.9
 
-53c8b20 update version in package.json to 1.0.8 (guseyn, Thu Jul 23 18:25:10 2026 +0400)
-a5805f8 add confirm screenshot (guseyn, Thu Jul 23 18:25:07 2026 +0400)
-89399c0 add e-confirm element (guseyn, Thu Jul 23 18:23:39 2026 +0400)
+006151b update version in package.json to 1.0.9 (guseyn, Wed Jul 29 20:34:17 2026 +0400)
+748129c some improvements, including for file reader in e-file-upload template (guseyn, Wed Jul 29 20:34:13 2026 +0400)
+98bbea3 update examples (guseyn, Thu Jul 23 18:43:14 2026 +0400)
+9c9b727 fix readme (guseyn, Thu Jul 23 18:32:53 2026 +0400)
