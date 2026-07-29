@@ -37,6 +37,7 @@ function initializeWeekPicker (node) {
   weekPickerBox.setAttribute('data-border', '')
   weekPickerBox.setAttribute('data-border-radius', 'lg')
   weekPickerBox.setAttribute('data-padding', '2xs')
+  weekPickerBox.setAttribute('data-generated-by-e-week-picker', '')
   weekPickerBox.internalState = {
     weekIndex: 0,
     weekRange: getWeekRangeMondayToSunday(0)
@@ -60,8 +61,39 @@ function initializeWeekPicker (node) {
   weekDisplay.setAttribute('data-width', 'full')
   weekDisplay.setAttribute('data-text-align', 'center')
   weekDisplay.setAttribute('data-font-weight', 'bold')
+  weekDisplay.style.cursor = 'default'
   weekDisplay.innerText = `${getAmericanStyleDate(weekPickerBox.internalState.weekRange.startDate)} - ${getAmericanStyleDate(weekPickerBox.internalState.weekRange.endDate)}`
   weekPickerBox.appendChild(weekDisplay)
+  weekDisplay.style.userSelect = 'none'
+  weekDisplay.style.cursor = 'default'
+  if (node.hasAttribute('data-view-click')) {
+    weekDisplay.addEventListener('mouseover', () => {
+      weekDisplay.style.color = 'var(--e-primary)'
+    })
+    weekDisplay.addEventListener('mouseleave', () => {
+      weekDisplay.style.color = ''
+    })
+    weekDisplay.style.cursor = 'pointer'
+  }
+  weekDisplay.addEventListener('click', (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (node.hasAttribute('data-view-click')) {
+      weekPickerBox.internalState.weekIndex = 0
+      weekPickerBox.internalState.weekRange = getWeekRangeMondayToSunday(
+        weekPickerBox.internalState.weekIndex
+      )
+      weekDisplay.innerText = `${getAmericanStyleDate(weekPickerBox.internalState.weekRange.startDate)} - ${getAmericanStyleDate(weekPickerBox.internalState.weekRange.endDate)}`
+      const state = getNodeScopedState(weekPickerBox)
+      state.weekIndex = weekPickerBox.internalState.weekIndex
+      state.weekRange = weekPickerBox.internalState.weekRange
+      evaluateActions(
+        node.getAttribute('data-view-click'),
+        weekDisplay,
+        state
+      )
+    }
+  })
 
   // Next Week Button
   const nextWeekButton = document.createElement('button')

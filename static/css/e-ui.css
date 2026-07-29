@@ -421,10 +421,10 @@
 *[data-flex-grow], [is^="e-"][data-flex-grow] { flex-grow: 1 !important; }
 *[data-flex-shrink="0"], [is^="e-"][data-flex-shrink="0"] { flex-shrink: 0 !important; }
 
-*[data-columns="1"], [is^="e-"][data-columns="1"] { grid-template-columns: repeat(1, 1fr) !important; }
-*[data-columns="2"], [is^="e-"][data-columns="2"] { grid-template-columns: repeat(2, 1fr) !important; }
-*[data-columns="3"], [is^="e-"][data-columns="3"] { grid-template-columns: repeat(3, 1fr) !important; }
-*[data-columns="auto"], [is^="e-"][data-columns="auto"] { grid-auto-flow: column !important; }
+*[data-columns="1"], [is^="e-"][data-columns="1"] { grid-template-columns: repeat(1, 1fr) }
+*[data-columns="2"], [is^="e-"][data-columns="2"] { grid-template-columns: repeat(2, 1fr) }
+*[data-columns="3"], [is^="e-"][data-columns="3"] { grid-template-columns: repeat(3, 1fr) }
+*[data-columns="auto"], [is^="e-"][data-columns="auto"] { grid-auto-flow: column; }
 
 *[data-font-weight="regular"], [is^="e-"][data-font-weight="regular"] { font-weight: var(--e-font-regular) !important; }
 *[data-font-weight="medium"], [is^="e-"][data-font-weight="medium"]  { font-weight: var(--e-font-medium) !important; }
@@ -907,13 +907,25 @@ img[data-loading] {
 }
 
 *[data-text-wrap], [is^="e-"][data-text-wrap] {
-  white-space: normal;
-  overflow-wrap: break-word;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
   word-break: break-word;
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 *[data-text-break-all], [is^="e-"][data-text-break-all] {
+  white-space: normal !important;
   word-break: break-all;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 *[data-text-nowrap], [is^="e-"][data-text-nowrap] {
@@ -1088,36 +1100,39 @@ form[is="e-form"] label:has(input[type="file"]) > img {
   border-radius: 1rem;
 }
 
-form[is="e-form"] label input[type="file"] {
+form[is="e-form"] input[type="file"] {
   display: none;
 }
 
+form[is="e-form"] label input[type="color"],
 form[is="e-form"] input[type="color"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   border: 1px solid #cdcdcd;
   height: 3.6rem;
-  width: 100%;
   border-radius: var(--e-radius-lg);
   padding: 0;
   cursor: pointer;
   background: none;
 }
 
+form[is="e-form"] label input[type="color"]::-webkit-color-swatch-wrapper,
 form[is="e-form"] input[type="color"]::-webkit-color-swatch-wrapper {
   padding: 0;
   border: none;
 }
 
+form[is="e-form"] label input[type="color"]::-webkit-color-swatch,
 form[is="e-form"] input[type="color"]::-webkit-color-swatch {
   border: none;
   border-radius: var(--e-radius-md);
 }
 
+form[is="e-form"] label input[type="color"]::-moz-color-swatch,
 form[is="e-form"] input[type="color"]::-moz-color-swatch {
   border: none;
-  border-radius: 50%;
+  border-radius: var(--e-radius-md);
 }
 
 a {
@@ -1135,10 +1150,11 @@ textarea {
   resize: vertical;
 }
 
-details {
+details,
+details[is="e-details"] {
   display: block;
   border: 1px solid var(--e-divider);
-  border-radius: 0.75rem;
+  border-radius: var(--e-radius-md);
   cursor: pointer;
   break-inside: avoid;
   width: 100%;
@@ -1500,7 +1516,8 @@ a[is="e-link-button"][data-variant="outline"]:hover {
 }
 
 /* --- Headings & Content --- */
-form[is="e-form"] label {
+form[is="e-form"] label,
+form[is="e-form"] div[is="e-label-without-active-button"] {
   display: flex;
   flex-direction: column;
   font-size: var(--e-font-size-xs);
@@ -1508,6 +1525,11 @@ form[is="e-form"] label {
   color: var(--e-muted);
   gap: var(--e-spacing-sm);
   line-height: 1;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  padding: 0;
+  cursor: default;
 }
 
 form[is="e-form"] label[data-flex-direction="row"] {
@@ -1549,9 +1571,61 @@ form[is="e-form"] label textarea:focus {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-primary) 20%, transparent);
 }
 
-form[is="e-form"] input[type="time"]::-webkit-datetime-edit {
-    display: block;
-    padding: 0;
+form[is="e-form"] label input:focus-visible,
+form[is="e-form"] label select:focus-visible,
+form[is="e-form"] label textarea:focus-visible,
+[is^="e-"] details summary:focus-visible {
+  outline: 2px solid var(--e-primary);
+  outline-offset: 2px;
+  border-radius: var(--e-radius-md);
+}
+
+form[is="e-form"] input[type="time"],
+form[is="e-form"] input[type="date"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  min-width: 0;
+  max-width: 100%;
+  height: 2.25rem;
+  line-height: 1;
+  overflow: hidden;
+}
+
+form[is="e-form"] input[type="time"]::-webkit-datetime-edit,
+form[is="e-form"] input[type="date"]::-webkit-datetime-edit {
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+form[is="e-form"] input[type="time"]::-webkit-datetime-edit-fields-wrapper,
+form[is="e-form"] input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  min-width: 0;
+  padding: 0;
+}
+
+form[is="e-form"] input[type="time"]::-webkit-datetime-edit-text,
+form[is="e-form"] input[type="time"]::-webkit-datetime-edit-hour-field,
+form[is="e-form"] input[type="time"]::-webkit-datetime-edit-minute-field,
+form[is="e-form"] input[type="time"]::-webkit-datetime-edit-meridiem-field,
+form[is="e-form"] input[type="date"]::-webkit-datetime-edit-text,
+form[is="e-form"] input[type="date"]::-webkit-datetime-edit-day-field,
+form[is="e-form"] input[type="date"]::-webkit-datetime-edit-month-field,
+form[is="e-form"] input[type="date"]::-webkit-datetime-edit-year-field {
+  padding: 0;
+}
+
+form[is="e-form"] input[type="time"]::-webkit-calendar-picker-indicator,
+form[is="e-form"] input[type="date"]::-webkit-calendar-picker-indicator {
+  margin: 0;
+  padding: 0;
+  height: 1.125rem;
+  width: 1.125rem;
 }
 
 form[is="e-form"] label:has(input[type="checkbox"]) {
@@ -1684,8 +1758,37 @@ hr[is="e-divider-text"]::after {
 
 /* --- Layout Elements (Divs) --- */
 div[is="e-box"] { display: block; }
-div[is="e-stack"] { display: flex; flex-direction: column; }
+div[is="e-stack"] { display: flex; flex-direction: column; min-width: 0; max-width: 100%; }
 div[is="e-row"] { display: flex; flex-direction: row; align-items: center; }
+
+div[is="e-row"] > label,
+div[is="e-row"] > div[is="e-label-without-active-button"] {
+  min-width: 0;
+}
+
+div[is="e-row"] > input[type="date"],
+div[is="e-row"] > input[type="time"] {
+  min-width: 0;
+  flex: 1 1 0;
+  width: auto;
+}
+
+div[is="e-row"][data-keep-flex-direction-row-in-mobile] > div[is="e-label-without-active-button"] {
+  flex: 1 1 0;
+}
+
+@media (min-width: 981px) {
+  div[is="e-row"]:not([data-keep-flex-direction-row-in-mobile]) > label {
+    flex: 1 1 0;
+  }
+  div[is="e-row"]:not([data-keep-flex-direction-row-in-mobile]) > div[is="e-label-without-active-button"] {
+    flex: 1 1 0;
+  }
+}
+
+div[is="e-row"][data-keep-flex-direction-row-in-mobile] > label {
+  flex: 1 1 0;
+}
 div[is="e-grid"] {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1763,6 +1866,9 @@ div[data-generated-by-e-dropdown-multiselect-template] {
 div[data-generated-by-e-dropdown-multiselect-template] input {
   width: 100%;
   box-sizing: border-box;
+}
+div[data-generated-by-e-dropdown-multiselect-template] input[type="search"]::-webkit-search-cancel-button {
+  display: none;
 }
 div[data-generated-by-e-dropdown-multiselect-template] div:has(span[is="e-chip"]) {
   width: 100%;
@@ -1901,6 +2007,7 @@ footer[is="e-footer"] {
 @media (max-width: 980px) {
   div[is="e-row"]:not([data-keep-flex-direction-row-in-mobile]) {
     flex-direction: column;
+    align-items: stretch;
   }
 
   div[is="e-grid"],
@@ -2380,6 +2487,9 @@ dialog[is="e-dialog"] e-tabs nav {
 e-tab {
   display: none;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 e-tab[data-active="true"] {
@@ -2406,6 +2516,7 @@ e-sidebar {
   display: flex;
   flex-direction: column;
   padding: 0 var(--e-spacing-sm) var(--e-spacing-xl) var(--e-spacing-sm);
+  overflow-x: visible;
 }
 
 /* Side Alignment */
@@ -2449,7 +2560,8 @@ e-sidebar nav {
   gap: var(--e-spacing-md);
   box-sizing: border-box;
   list-style: none;
-  padding: 0;
+  padding-left: 4px;
+  padding-right: 4px;
   margin: 0;
   overflow-y: auto;
   scrollbar-width: none;

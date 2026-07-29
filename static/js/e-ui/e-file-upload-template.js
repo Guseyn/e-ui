@@ -1,4 +1,4 @@
-import getNodeScopedState from '#ehtml/getNodeScopedState.js'
+import getNodeScopedState from '#ehtml/getNodeScopedState.js?v=41ab2bfa'
 import evaluateActions from '#ehtml/evaluateActions.js'
 
 class EFileUploadTemplate extends HTMLTemplateElement {
@@ -62,6 +62,16 @@ function bindAccessibleFileUploadLabel(label, fileInputField, node) {
   })
 }
 
+function showFileUploadError(node, message) {
+  if (node.hasAttribute('data-show-errors-in-toast')) {
+    showErrorToast(message)
+  } else if (node.hasAttribute('data-show-errors-in-toast-in-dialog')) {
+    showErrorToastInDialog(message)
+  } else {
+    alert(message)
+  }
+}
+
 function initializeFileUpload(node) {
   const label = document.createElement('label')
   if (node.hasAttribute('data-label-text')) {
@@ -87,10 +97,11 @@ function initializeFileUpload(node) {
   if (node.hasAttribute('data-ignore')) {
     fileInputField.setAttribute('data-ignore', 'true')
   }
-  const accept = node.getAttribute('data-accept')
+  const accept = node.getAttribute('data-accept') || ''
   fileInputField.setAttribute('accept', accept)
   const fileInputIcon = document.createElement('img')
-  fileInputIcon.src = node.getAttribute('data-icon-src')
+  const defaultIconSrc = node.getAttribute('data-icon-src')
+  fileInputIcon.src = defaultIconSrc
   fileInputIcon.alt = ''
   fileInputIcon.setAttribute('aria-hidden', 'true')
 
@@ -105,7 +116,7 @@ function initializeFileUpload(node) {
     detailsSpan.innerText = node.getAttribute('data-details-text')
     label.appendChild(detailsSpan)
   }
-  
+
   label.appendChild(fileInputField)
   label.appendChild(fileInputIcon)
 
@@ -128,6 +139,7 @@ function initializeFileUpload(node) {
   )
 
   const maxSizeInMb = node.getAttribute('data-max-size-in-mb') * 1
+  const acceptedTypes = accept.split(',').map((type) => type.trim()).filter(Boolean)
 
   function runFileLoadStart(fileName) {
     if (node.hasAttribute('data-actions-on-file-load-start')) {
@@ -170,57 +182,117 @@ function initializeFileUpload(node) {
     }
   }
 
-  async function loadFilesFromList(files) {
-    for (const [index, file] of files.entries()) {
-      runFileLoadStart(file.name)
-      await loadFile(file, maxSizeInMb, index > 0)
-      runFileLoadEnd(file.name)
+  function clearFileNames() {
+    const fileNameSpanFromPrevSelection = label.querySelector('b[data-name="file-names"]')
+    if (fileNameSpanFromPrevSelection) {
+      label.removeChild(fileNameSpanFromPrevSelection)
     }
   }
 
-  fileInputField.addEventListener('change', async (e) => {
-    if (node.hasAttribute('multiple')) {
-      const files = [...e.target.files]
-      if (node.hasAttribute('data-max-number-of-files')) {
-        if (files.length > (node.getAttribute('data-max-number-of-files') * 1)) {
-          if (node.hasAttribute('data-show-errors-in-toast')) {
-            showErrorToast(`Max number of files is ${node.getAttribute('data-max-number-of-files')}`)
-            fileInputField.value = ""
-          } else if (node.hasAttribute('data-show-errors-in-toast-in-dialog')) {
-            showErrorToastInDialog(`Max number of files is ${node.getAttribute('data-max-number-of-files')}`)
-            fileInputField.value = ""
-          } else {
-            alert(`Max number of files is ${node.getAttribute('data-max-number-of-files')}`)
-          }
-          return
-        }
-      }
-      await loadFilesFromList(files)
-    } else {
-      const file = e.target.files[0]
-      runFileLoadStart(file.name)
-      await loadFile(file, maxSizeInMb)
-      runFileLoadEnd(file.name)
+  function updateFileNameDisplay(fileName, appendFile) {
+    if (node.hasAttribute('data-hide-upload-file-name')) {
+      return
     }
+    const fileNameSpanFromPrevSelection = label.querySelector('b[data-name="file-names"]')
+    let previousFileNames
+    if (fileNameSpanFromPrevSelection) {
+      previousFileNames = fileNameSpanFromPrevSelection.innerText
+      label.removeChild(fileNameSpanFromPrevSelection)
+    }
+    const fileNameSpan = document.createElement('b')
+    fileNameSpan.setAttribute('data-name', 'file-names')
+    label.appendChild(fileNameSpan)
+    if (appendFile && previousFileNames) {
+      fileNameSpan.innerText = previousFileNames + ', ' + fileName
+    } else {
+      fileNameSpan.innerText = fileName
+    }
+  }
+
+  function restoreDefaultIcon() {
+    if (accept.includes('image') && fileInputIcon && defaultIconSrc) {
+      fileInputIcon.src = defaultIconSrc
+    }
+  }
+
+  function validateFiles(files) {
+    if (!files || files.length === 0) {
+      return true
+    }
+    if (node.hasAttribute('data-max-number-of-files')) {
+      const maxFiles = node.getAttribute('data-max-number-of-files') * 1
+      if (files.length > maxFiles) {
+        showFileUploadError(node, `Max number of files is ${maxFiles}`)
+        return false
+      }
+    }
+    const maxSize = maxSizeInMb * 1024 * 1024
+    for (const file of files) {
+      if (acceptedTypes.length && !acceptedTypes.includes(file.type)) {
+        showFileUploadError(node, `Only ${accept} are allowed.`)
+        return false
+      }
+      if (maxSizeInMb && file.size > maxSize) {
+        showFileUploadError(node, `File too large. Max ${maxSizeInMb}MB.`)
+        return false
+      }
+    }
+    return true
+  }
+
+  fileInputField.addEventListener('change', (e) => {
+    const files = [...e.target.files]
+    if (!validateFiles(files)) {
+      fileInputField.value = ''
+      fileInputField.filesInfo = undefined
+      e.stopImmediatePropagation()
+      clearFileNames()
+      restoreDefaultIcon()
+    }
+  }, true)
+
+  fileInputField.addEventListener('ehtml:file-read-start', (e) => {
+    runFileLoadStart(e.detail.fileName)
+  })
+
+  fileInputField.addEventListener('ehtml:file-read-progress', (e) => {
+    runFileLoadProgress(e.detail.percentage, e.detail.fileName)
+  })
+
+  fileInputField.addEventListener('ehtml:file-read-end', (e) => {
+    const { fileName, index, fileInfo } = e.detail
+    updateFileNameDisplay(fileName, index > 0)
+    if (accept.includes('image') && fileInfo?.content) {
+      fileInputIcon.src = fileInfo.content
+    }
+    runFileLoadEnd(fileName)
+  })
+
+  fileInputField.addEventListener('ehtml:file-read-cleared', () => {
+    clearFileNames()
+    restoreDefaultIcon()
+  })
+
+  fileInputField.addEventListener('ehtml:file-read-error', (e) => {
+    showFileUploadError(node, `Could not read file ${e.detail.fileName || ''}`)
+    fileInputField.value = ''
+    fileInputField.filesInfo = undefined
+    clearFileNames()
+    restoreDefaultIcon()
   })
 
   if (fileInputField.form) {
     fileInputField.form.addEventListener('reset', () => {
-        if (node.internalState && node.internalState['preuploadedFiles']) {
-          const fileNameSpan = document.createElement('b')
-          if (preuploadedFiles.length > 0) {
-            fileNameSpan.innerHTML = preuploadedFiles.map(file => `<a href="${file.url}${queryForPreuploadedFiles}">${file.filename}</a>`).join('<br>')
-            label.appendChild(fileNameSpan)
-          }
-        } else {
-          const fileNameSpanFromPrevSelection = label.querySelector('b[data-name="file-names"]')
-          if (fileNameSpanFromPrevSelection) {
-            label.removeChild(fileNameSpanFromPrevSelection)
-          }
-          if (accept.includes('image') && fileInputIcon && node.getAttribute('data-icon-src')) {
-            fileInputIcon.src = node.getAttribute('data-icon-src')
-          }
+      if (node.internalState && node.internalState['preuploadedFiles']) {
+        const fileNameSpan = document.createElement('b')
+        if (preuploadedFiles.length > 0) {
+          fileNameSpan.innerHTML = preuploadedFiles.map(file => `<a href="${file.url}${queryForPreuploadedFiles}">${file.filename}</a>`).join('<br>')
+          label.appendChild(fileNameSpan)
         }
+      } else {
+        clearFileNames()
+        restoreDefaultIcon()
+      }
     })
   }
 
@@ -233,108 +305,25 @@ function initializeFileUpload(node) {
     label.classList.remove('dragover')
   })
 
-  label.addEventListener('drop', async (e) => {
+  label.addEventListener('drop', (e) => {
     e.preventDefault()
     label.classList.remove('dragover')
 
-    if (node.hasAttribute('multiple')) {
-      const files = [...e.dataTransfer.files]
-      if (node.hasAttribute('data-max-number-of-files')) {
-        if (files.length > (node.getAttribute('data-max-number-of-files') * 1)) {
-          if (node.hasAttribute('data-show-errors-in-toast')) {
-            showErrorToast(`Max number of files is ${node.getAttribute('data-max-number-of-files')}`)
-            fileInputField.value = ""
-          } else if (node.hasAttribute('data-show-errors-in-toast-in-dialog')) {
-            showErrorToastInDialog(`Max number of files is ${node.getAttribute('data-max-number-of-files')}`)
-            fileInputField.value = ""
-          } else {
-            alert(`Max number of files is ${node.getAttribute('data-max-number-of-files')}`)
-          }
-          return
-        }
-      }
-      await loadFilesFromList(files)
-    } else {
-      const file = e.dataTransfer.files[0]
-      runFileLoadStart(file.name)
-      await loadFile(file, maxSizeInMb)
-      runFileLoadEnd(file.name)
+    const files = node.hasAttribute('multiple')
+      ? [...e.dataTransfer.files]
+      : (e.dataTransfer.files[0] ? [e.dataTransfer.files[0]] : [])
+
+    if (!validateFiles(files)) {
+      fileInputField.value = ''
+      fileInputField.filesInfo = undefined
+      return
     }
+
+    const dataTransfer = new DataTransfer()
+    for (const file of files) {
+      dataTransfer.items.add(file)
+    }
+    fileInputField.files = dataTransfer.files
+    fileInputField.dispatchEvent(new Event('change', { bubbles: true }))
   })
-
-  async function loadFile(file, maxSizeInMb, appendFile) {
-    if (!file) {
-      return
-    }
-
-    const maxSize = maxSizeInMb * 1024 * 1024
-    if (!accept.split(', ').includes(file.type)) {
-      if (node.hasAttribute('data-show-errors-in-toast')) {
-        showErrorToast(`Only ${accept} are allowed.`)
-        fileInputField.value = ""
-      } else if (node.hasAttribute('data-show-errors-in-toast-in-dialog')) {
-        showErrorToastInDialog(`Only ${accept} are allowed.`)
-        fileInputField.value = ""
-      } else {    
-        alert(`Only ${accept} are allowed.`)
-      }
-      return
-    }
-
-    if (file.size > maxSize) {
-      if (node.hasAttribute('data-show-errors-in-toast')) {
-        showErrorToast(`File too large. Max ${maxSizeInMb}MB.`)
-        fileInputField.value = ""
-      } else if (node.hasAttribute('data-show-errors-in-toast-in-dialog')) {
-        showErrorToastInDialog(`File too large. Max ${maxSizeInMb}MB.`)
-        fileInputField.value = ""
-      } else { 
-        alert(`File too large. Max ${maxSizeInMb}MB.`)
-      }
-      return
-    }
-
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const percentage = Math.min(
-            100,
-            Math.max(0, Math.round((event.loaded / event.total) * 100))
-          )
-          runFileLoadProgress(percentage, file.name)
-        }
-      }
-      reader.onload = (e) => {
-        try {
-          const fileNameSpanFromPrevSelection = label.querySelector('b[data-name="file-names"]')
-          let previousFileNames
-          if (fileNameSpanFromPrevSelection) {
-            previousFileNames = fileNameSpanFromPrevSelection.innerText
-            label.removeChild(fileNameSpanFromPrevSelection)
-          }
-          if (!node.hasAttribute('data-hide-upload-file-name')) {
-            const fileNameSpan = document.createElement('b')
-            fileNameSpan.setAttribute('data-name' , 'file-names')
-            label.appendChild(fileNameSpan)
-            if (appendFile && previousFileNames) {
-              fileNameSpan.innerText += previousFileNames + ', ' + file.name
-            } else if (fileNameSpan) {
-              fileNameSpan.innerText = file.name
-            }
-          }
-          if (accept.includes('image')) {
-            fileInputIcon.src = e.target.result
-          }
-          resolve(e.target.result)
-        } catch (err) {
-          reject(err)
-        }
-      }
-      reader.onerror = () => {
-        reject(reader.error)
-      }
-      reader.readAsDataURL(file)
-    })
-  }
 }

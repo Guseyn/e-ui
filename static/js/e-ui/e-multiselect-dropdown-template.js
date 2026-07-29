@@ -63,14 +63,21 @@ function initializeMultiselect (node) {
     searchLabel.appendChild(listOfSelectedElements)
   }
   const searchInput = document.createElement('input')
-  searchInput.setAttribute('type', 'text')
+  searchInput.setAttribute('type', 'search')
   searchInput.setAttribute('placeholder', 'Search...')
-  searchInput.setAttribute('name', 'search')
-  searchInput.setAttribute('autocomplete', 'off')
+  searchInput.setAttribute('autocomplete', 'one-time-code')
+  searchInput.setAttribute('autocorrect', 'off')
+  searchInput.setAttribute('autocapitalize', 'off')
+  searchInput.setAttribute('spellcheck', 'false')
+  searchInput.setAttribute('inputmode', 'search')
   searchInput.setAttribute('data-ignore', 'true')
+  searchInput.setAttribute('data-1p-ignore', '')
+  searchInput.setAttribute('data-lpignore', 'true')
   searchInput.setAttribute('aria-label', `Search ${fieldLabel}`)
+  searchInput.setAttribute('role', 'combobox')
   searchInput.setAttribute('aria-autocomplete', 'list')
   searchInput.setAttribute('aria-expanded', 'false')
+  searchInput.setAttribute('readonly', 'readonly')
   searchInput.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && searchInput.getAttribute('aria-expanded') === 'true') {
       event.preventDefault()
@@ -190,6 +197,7 @@ function initializeMultiselect (node) {
   })
 
   searchInput.addEventListener('focus', () => {
+    searchInput.removeAttribute('readonly')
     setDropdownOpen(true)
   })
 

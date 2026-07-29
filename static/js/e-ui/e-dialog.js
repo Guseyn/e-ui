@@ -81,6 +81,13 @@ export class EDialog extends HTMLDialogElement {
   showModal() {
     this.#lock()
     super.showModal()
+    // showModal() focuses the first focusable descendant. A nested <iframe>
+    // (e.g. the code-of-conduct PDF) swallows Escape inside its own document,
+    // so the window listener above never runs and the modal looks stuck.
+    const focused = document.activeElement
+    if (focused && focused.tagName === 'IFRAME' && this.contains(focused)) {
+      this.focus()
+    }
     if (this.hasAttribute('data-onopen')) {
       evaluateActions(
         this.getAttribute('data-onopen'),
