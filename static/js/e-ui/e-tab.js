@@ -111,7 +111,7 @@ class ETabs extends HTMLElement {
   }
 
   #titleToHash(title) {
-    return title.toLowerCase().replaceAll(/\s+/g, '-')
+    return encodeURIComponent(title.toLowerCase().replaceAll(/\s+/g, '-'))
   }
 
   #hashToTabIndex() {
