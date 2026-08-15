@@ -1,3 +1,4 @@
-# Release 1.0.12
+# Release 1.0.13
 
-cbdc3bb update version in package.json to 1.0.12 (guseyn, Thu Jul 30 10:57:52 2026 +0400)
+555699a update version in package.json to 1.0.13 (guseyn, Sun Aug 16 03:16:02 2026 +0400)
+759b163 e-date and e-time (guseyn, Sun Aug 16 03:15:59 2026 +0400)
