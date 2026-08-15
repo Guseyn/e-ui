@@ -461,6 +461,7 @@ class EDate extends HTMLInputElement {
 
     const monthSelect = document.createElement('select')
     monthSelect.setAttribute('aria-label', 'Month')
+    monthSelect.setAttribute('data-ignore', '')
     getMonthNames().forEach((name, idx) => {
       const option = document.createElement('option')
       option.value = String(idx)
@@ -475,6 +476,7 @@ class EDate extends HTMLInputElement {
     const yearInput = document.createElement('input')
     yearInput.type = 'number'
     yearInput.setAttribute('aria-label', 'Year')
+    yearInput.setAttribute('data-ignore', '')
     yearInput.value = String(this.#viewYear)
     yearInput.addEventListener('change', () => {
       this.#viewYear = parseInt(yearInput.value, 10) || currentYear()
