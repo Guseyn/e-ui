@@ -270,8 +270,12 @@ class ETime extends HTMLInputElement {
     const def = SEGMENT_DEFS[this.#activeSegment]
 
     // If segment buffer is already at max length, ignore the digit
-    if (this.#buffer[this.#activeSegment].length >= def.len) {
-      return
+    // If segment buffer is already at max length, reset it
+    if (this.#buffer[this.#activeSegment].length === def.len) {
+      this.#buffer[this.#activeSegment] = ''
+      this.#renderDisplay()
+      this.#highlightActiveSegment()
+      this.dispatchEvent(new Event('input', { bubbles: true }))
     }
 
     const { finalValue, shouldAdvance } = typeDigitIntoSegment(
