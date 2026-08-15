@@ -14,11 +14,13 @@
   }
   </script>
   <script type="module">
+    import "/js/example-color-picker.js"
+  </script>
+  <script type="module">
     import '#e-ui/e-selectable-chip.js'
     import '#e-ui/e-kbd.js'
     import '#e-ui/e-kbd-graph.js'
     import '#e-ui/e-toast.js'
-    import '#e-ui/example-primary-picker.js'
     import '#ehtml/main'
   </script>
   <link rel="stylesheet" href="/css/e-ui.css">
@@ -42,7 +44,7 @@
     <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
       <h1 is="e-h">Chips &amp; Keyboard</h1>
       <div is="e-stack" data-gap="sm" data-align-items="flex-end">
-        <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary">
+        <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary" value="#3551A4">
         <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
       </div>
     </div>

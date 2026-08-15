@@ -14,9 +14,11 @@
   }
   </script>
   <script type="module">
+    import "/js/example-color-picker.js"
+  </script>
+  <script type="module">
     import '#e-ui/e-sidebar.js'
     import '#e-ui/e-tab.js'
-    import '#e-ui/example-primary-picker.js'
     import '#ehtml/main'
   </script>
   <link rel="stylesheet" href="/css/e-ui.css">
@@ -121,7 +123,7 @@
           <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
             <h1 is="e-h"></span>Sidebar &amp; Tabs<span data-text=" (in ${urlParams['page']})"></h1>
             <div is="e-stack" data-gap="sm" data-align-items="flex-end">
-              <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary">
+              <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary" value="#3551A4">
               <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
             </div>
           </div>

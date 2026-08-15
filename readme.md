@@ -365,6 +365,8 @@ These require JS module imports and EHTML activation. Most expose `data-action`,
 | `e-toast.js` | `<e-toast>` | Toast notifications |
 | `e-dialog.js` | `dialog[is="e-dialog"]` | Modal dialogs |
 | `e-confirm.js` | `<e-confirm>` | Promise-based confirm dialog |
+| `e-date.js` | `input[is="e-date"]` | Date picker with calendar popup |
+| `e-time.js` | `input[is="e-time"]` | 12-hour time picker |
 | `e-sidebar.js` | `<e-sidebar>` | App sidebar |
 | `e-tab.js` | `<e-tabs>`, `<e-tab>` | Tab navigation |
 | `e-kbd.js` | `kbd[is="e-kbd"]` | Keyboard shortcuts via `data-action` |
@@ -489,6 +491,133 @@ onclick="
   })()
 "
 ```
+
+### `e-date`
+
+Live demo: [date-time.html](static/html/examples/date-time.html) · Screenshot: [e-date.png](static/images/e-date.png)
+
+Accessible date picker with keyboard input, arrow-key navigation, and a visual calendar popup. Displays dates as MM/DD/YYYY and stores values in ISO format (YYYY-MM-DD).
+
+```html
+<script type="module">
+  import '#e-ui/e-date.js'
+  import '#ehtml/main'
+</script>
+
+<label>
+  Birth Date
+  <input is="e-date" type="text" name="birthdate" placeholder="mm/dd/yyyy">
+</label>
+
+<!-- With initial value -->
+<input is="e-date" value="2026-03-15">
+
+<!-- With date range constraints -->
+<input is="e-date" min="2026-01-01" max="2026-03-31">
+```
+
+**Features:**
+- **Keyboard input:** Type digits directly; auto-advances between segments (month → day → year)
+- **Smart typing:** First digit auto-commits if no valid 2-digit completion exists
+- **Arrow keys:** Navigate segments and increment/decrement values with wrapping at boundaries
+- **Calendar popup:** Press Space to open visual month/year picker with full keyboard navigation
+- **Date constraints:** Optional `min` and `max` attributes in ISO format (YYYY-MM-DD)
+- **Quick actions:** "Today" and "Clear" buttons in calendar popup
+- **Accessibility:** Full keyboard navigation, ARIA labels, live region announcements
+
+**API:**
+
+```javascript
+const dateInput = document.querySelector('input[is="e-date"]')
+
+// Get value (ISO format: YYYY-MM-DD)
+console.log(dateInput.value) // "2026-03-15" or ""
+
+// Set value (accepts ISO or MM/DD/YYYY)
+dateInput.value = "2026-12-25"
+
+// Listen for changes
+dateInput.addEventListener('change', (e) => {
+  console.log('Selected date:', e.target.value)
+})
+```
+
+**Keyboard shortcuts:**
+
+| Key(s) | Action |
+|--------|--------|
+| `0–9` | Type digit into active segment |
+| `↑` | Increment segment (wraps at boundaries) |
+| `↓` | Decrement segment (wraps at boundaries) |
+| `←` / `→` | Move to previous/next segment |
+| `Tab` / `Shift+Tab` | Navigate segments |
+| `Backspace` / `Delete` | Delete digit from right to left |
+| `Space` | Open/close calendar popup |
+| `Escape` | Close calendar popup |
+
+### `e-time`
+
+Live demo: [date-time.html](static/html/examples/date-time.html)
+
+12-hour time picker with AM/PM toggle. Displays times as hh:mm am/pm and stores values in 24-hour ISO format (HH:mm).
+
+```html
+<script type="module">
+  import '#e-ui/e-time.js'
+  import '#ehtml/main'
+</script>
+
+<label>
+  Meeting Time
+  <input is="e-time" type="text" name="time" placeholder="hh:mm am">
+</label>
+
+<!-- With initial value (24-hour) -->
+<input is="e-time" value="14:30">
+
+<!-- With initial value (12-hour) -->
+<input is="e-time" value="03:45 PM">
+```
+
+**Features:**
+- **Three segments:** Hour (12-hour), Minute, AM/PM
+- **Keyboard input:** Type digits for hour and minute; letters A/P for AM/PM toggle
+- **Smart typing:** First digit auto-commits if no valid 2-digit completion exists
+- **Arrow keys:** Navigate segments and increment/decrement values; toggle AM/PM
+- **Format flexibility:** Accepts both 24-hour (HH:mm) and 12-hour (hh:mm am/pm) input formats
+- **Value format:** Always returns 24-hour ISO format (HH:mm)
+- **Accessibility:** Full keyboard navigation, proper ARIA labels
+
+**API:**
+
+```javascript
+const timeInput = document.querySelector('input[is="e-time"]')
+
+// Get value (24-hour ISO format: HH:mm)
+console.log(timeInput.value) // "14:30" or ""
+
+// Set value (accepts HH:mm or hh:mm AM/PM)
+timeInput.value = "14:30"
+timeInput.value = "02:30 PM"
+
+// Listen for changes
+timeInput.addEventListener('change', (e) => {
+  console.log('Selected time:', e.target.value)
+})
+```
+
+**Keyboard shortcuts:**
+
+| Key(s) | Action |
+|--------|--------|
+| `0–9` | Type digit into hour or minute segment |
+| `A` | Set to AM (in meridiem segment) |
+| `P` | Set to PM (in meridiem segment) |
+| `↑` | Increment segment or toggle AM/PM |
+| `↓` | Decrement segment or toggle AM/PM |
+| `←` / `→` | Move to previous/next segment |
+| `Tab` / `Shift+Tab` | Navigate segments |
+| `Backspace` / `Delete` | Delete digit from right to left |
 
 ### `e-sidebar`
 

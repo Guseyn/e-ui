@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-ui — Date &amp; Time Inputs</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "#ehtml/": "/js/ehtml/",
+      "#ehtml/main": "/js/ehtml/main.js",
+      "#e-ui/": "/js/e-ui/"
+    }
+  }
+  </script>
+  <script type="module">
+    import "/js/example-color-picker.js"
+  </script>
+  <script type="module">
+    import '#e-ui/e-date.js'
+    import '#e-ui/e-time.js'
+    import '#ehtml/main'
+
+    // Example: log date and time changes
+    document.addEventListener('change', (e) => {
+      if (e.target.is === 'e-date' || e.target.is === 'e-time') {
+        console.log(`${e.target.is} changed to: ${e.target.value}`)
+      }
+    })
+
+  </script>
+  <link rel="stylesheet" href="/css/e-ui.css">
+  <style>
+    :root {
+      --e-font-typography: var(--e-font-interface);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--e-spacing-lg);
+    }
+
+    label > span[is="e-caption"] {
+      display: block;
+      margin-bottom: var(--e-spacing-sm);
+    }
+  </style>
+</head>
+<body>
+  <div is="e-stack" data-gap="2xl" data-padding="2xl">
+    <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
+      <h1 is="e-h">Date &amp; Time Inputs</h1>
+      <div is="e-stack" data-gap="sm" data-align-items="flex-end">
+        <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary" value="#3551A4">
+        <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
+      </div>
+    </div>
+
+    <main is="e-main" data-centralized>
+      <div is="e-stack" data-gap="3xl">
+
+        <!-- e-date component -->
+        <section is="e-stack" data-gap="lg">
+          <h2 is="e-h">Date Input (<code is="e-code">e-date</code>)</h2>
+
+          <div class="demo-grid">
+            <!-- Basic date input -->
+            <div is="e-card" data-padding="lg">
+              <form is="e-form" data-no-style onsubmit="event.preventDefault()">
+                <label>
+                  <span is="e-caption">Birth Date</span>
+                  <input is="e-date" type="text" name="birthdate" placeholder="mm/dd/yyyy">
+                </label>
+              </form>
+            </div>
+
+            <!-- Date input with initial value -->
+            <div is="e-card" data-padding="lg">
+              <form is="e-form" data-no-style onsubmit="event.preventDefault()">
+                <label>
+                  <span is="e-caption">Meeting Date (preset)</span>
+                  <input is="e-date" type="text" name="meeting" placeholder="mm/dd/yyyy" value="2026-03-15">
+                </label>
+              </form>
+            </div>
+
+            <!-- Date input with min/max constraints -->
+            <div is="e-card" data-padding="lg">
+              <form is="e-form" data-no-style onsubmit="event.preventDefault()">
+                <label>
+                  <span is="e-caption">Available Date (Q1 2026)</span>
+                  <input is="e-date" type="text" name="available" placeholder="mm/dd/yyyy"
+                         min="2026-01-01" max="2026-03-31">
+                </label>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Divider -->
+        <hr is="e-divider">
+
+        <!-- e-time component -->
+        <section is="e-stack" data-gap="lg">
+          <h2 is="e-h">Time Input (<code is="e-code">e-time</code>)</h2>
+
+          <div class="demo-grid">
+            <!-- Basic time input -->
+            <div is="e-card" data-padding="lg">
+              <form is="e-form" data-no-style onsubmit="event.preventDefault()">
+                <label>
+                  <span is="e-caption">Meeting Time</span>
+                  <input is="e-time" type="text" name="time" placeholder="hh:mm am">
+                </label>
+              </form>
+            </div>
+
+            <!-- Time input with initial value (24-hour) -->
+            <div is="e-card" data-padding="lg">
+              <form is="e-form" data-no-style onsubmit="event.preventDefault()">
+                <label>
+                  <span is="e-caption">Start Time (preset)</span>
+                  <input is="e-time" type="text" name="start" placeholder="hh:mm am" value="14:30">
+                </label>
+              </form>
+            </div>
+
+            <!-- Time input with 12-hour format initial value -->
+            <div is="e-card" data-padding="lg">
+              <form is="e-form" data-no-style onsubmit="event.preventDefault()">
+                <label>
+                  <span is="e-caption">End Time (12h format)</span>
+                  <input is="e-time" type="text" name="end" placeholder="hh:mm am" value="03:45 PM">
+                </label>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Combined form example -->
+        <section is="e-stack" data-gap="lg">
+          <h2 is="e-h">Combined Date &amp; Time Form</h2>
+          <div is="e-card" data-padding="lg">
+            <form is="e-form" data-no-style data-width="sm" onsubmit="event.preventDefault()">
+              <div is="e-stack" data-gap="md">
+                <label>
+                  Event Name
+                  <input type="text" name="eventName" placeholder="Enter event name" required>
+                </label>
+                <label>
+                  Start Date
+                  <input is="e-date" type="text" name="startDate" placeholder="mm/dd/yyyy" required data-width="full">
+                </label>
+                <label>
+                  Start Time
+                  <input is="e-time" type="text" name="startTime" placeholder="hh:mm am" required>
+                </label>
+                <label>
+                  End Date
+                  <input is="e-date" type="text" name="endDate" placeholder="mm/dd/yyyy" required data-width="full">
+                </label>
+                <label>
+                  End Time
+                  <input is="e-time" type="text" name="endTime" placeholder="hh:mm am" required>
+                </label>
+                <button data-primary type="submit">Schedule Event</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

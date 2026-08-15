@@ -16,7 +16,6 @@
   <script type="module">
     import '#e-ui/e-toast.js'
     import '#e-ui/e-dialog.js'
-    import '#e-ui/example-primary-picker.js'
     import '#ehtml/main'
 
     const successToast = document.querySelector('#toast-success')
@@ -41,6 +40,9 @@
     document.querySelector('#btn-dialog-large').addEventListener('click', () => {
       document.querySelector('#dialog-large').showModal()
     })
+  </script>
+  <script type="module">
+    import '/js/example-color-picker.js'
   </script>
   <link rel="stylesheet" href="/css/e-ui.css">
   <style>
@@ -69,7 +71,7 @@
     <div is="e-row" data-justify-content="space-between" data-keep-flex-direction-row-in-mobile>
       <h1 is="e-h">Dialog &amp; Toast</h1>
       <div is="e-stack" data-gap="sm" data-align-items="flex-end">
-        <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary">
+        <input type="color" data-e-primary-picker aria-label="Primary color" title="--e-primary" value="#3551A4">
         <a is="e-link" data-underlined href="/html/index.html">← Gallery</a>
       </div>
     </div>

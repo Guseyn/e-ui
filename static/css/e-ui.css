@@ -1540,10 +1540,11 @@ form[is="e-form"] label input,
 form[is="e-form"] label select,
 form[is="e-form"] label textarea {
   width: 100%;
+  height: 2.25rem;
   font-family: inherit;
   font-size: var(--e-font-size-md);
   padding: var(--e-spacing-sm) var(--e-spacing-md);
-  border-radius: var(--e-radius-xl);
+  border-radius: var(--e-radius-md);
   border: 1px solid var(--e-border);
   background: var(--e-muted-bg);
   color: var(--e-fg);
@@ -1554,10 +1555,6 @@ form[is="e-form"] label textarea {
     border-color 0.15s ease,
     box-shadow 0.15s ease,
     background 0.15s ease;
-}
-
-form[is="e-form"] label select {
-  height: 2.25rem;
 }
 
 form[is="e-form"] label {
@@ -3091,4 +3088,174 @@ e-scrollable[data-show-scrollbar]::-webkit-scrollbar-thumb:hover {
 
 e-json {
   display: none;
+}
+
+/* --- Date & Time Pickers --- */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+input[is="e-date"],
+input[is="e-time"] {
+  font-family: inherit;
+  font-size: var(--e-font-size-md);
+  padding: var(--e-spacing-sm) var(--e-spacing-md);
+  border-radius: var(--e-radius-xl);
+  border: 1px solid var(--e-border);
+  background: var(--e-muted-bg);
+  color: var(--e-fg);
+  outline: none;
+  box-sizing: border-box;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  cursor: text;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+input[is="e-date"]:focus,
+input[is="e-time"]:focus {
+  border-color: var(--e-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-primary) 20%, transparent);
+}
+
+input[is="e-date"]:focus-visible,
+input[is="e-time"]:focus-visible {
+  outline: 2px solid var(--e-primary);
+  outline-offset: 2px;
+  border-radius: var(--e-radius-md);
+}
+
+span[data-e-date-wrapper] {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+span[data-e-date-wrapper]:has(input[data-width="full"]),
+span[data-e-date-wrapper] e-tooltip:has(input[data-width="full"]) {
+  width: 100%;
+}
+
+div[is="e-date-selector"] {
+  position: absolute;
+  left: 0;
+  z-index: 100000;
+  min-width: 15rem;
+  background: var(--e-surface-bg);
+  border: 1px solid var(--e-border);
+  border-radius: var(--e-radius-lg);
+  box-shadow: var(--e-shadow-lg);
+  padding: var(--e-spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-spacing-xs);
+  box-sizing: border-box;
+}
+
+div[is="e-date-selector"] div[is="e-row"] {
+  gap: var(--e-spacing-sm);
+  justify-content: space-between;
+}
+
+div[is="e-date-selector"] select,
+div[is="e-date-selector"] input[type="number"] {
+  padding: var(--e-spacing-xs) var(--e-spacing-sm);
+  border: 1px solid var(--e-border);
+  border-radius: var(--e-radius-md);
+  background: var(--e-muted-bg);
+  font-size: var(--e-font-size-md);
+  font-family: inherit;
+  color: var(--e-fg);
+  outline: none;
+  box-sizing: border-box;
+  line-height: 1;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+div[is="e-date-selector"] select:focus,
+div[is="e-date-selector"] input[type="number"]:focus {
+  border-color: var(--e-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--e-primary) 15%, transparent);
+}
+
+div[is="e-date-selector"] table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+div[is="e-date-selector"] th {
+  font-size: var(--e-font-size-2xs);
+  font-weight: 600;
+  color: var(--e-muted);
+  text-transform: uppercase;
+  padding: var(--e-spacing-3xs);
+  text-align: center;
+  height: 1.5rem;
+}
+
+div[is="e-date-selector"] td {
+  padding: var(--e-spacing-2xs);
+  text-align: center;
+  height: 1.75rem;
+}
+
+div[is="e-date-selector"] td button {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--e-radius-md);
+  background: transparent;
+  font-size: var(--e-font-size-sm);
+  font-weight: 500;
+  color: var(--e-fg);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  font-family: inherit;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+div[is="e-date-selector"] td button:hover:not(:disabled) {
+  border: 1px solid var(--e-primary);
+  background-color: var(--e-primary-transparent-accent-bg);
+}
+
+div[is="e-date-selector"] td button:focus-visible {
+  outline: 2px solid var(--e-primary);
+  outline-offset: 1px;
+}
+
+div[is="e-date-selector"] td button[data-outside-month="true"] {
+  color: var(--e-muted);
+  opacity: 0.55;
+}
+
+div[is="e-date-selector"] td button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  color: var(--e-muted);
+}
+
+div[is="e-date-selector"] td button[data-selected="true"] {
+  border: 1px solid var(--e-primary);
+  background-color: var(--e-primary-transparent-accent-bg);
+  font-weight: 700;
+  color: var(--e-fg);
+}
+
+div[is="e-date-selector"] div[is="e-row"]:last-of-type {
+  justify-content: flex-end;
+  gap: var(--e-spacing-sm);
+  margin-top: var(--e-spacing-sm);
 }
