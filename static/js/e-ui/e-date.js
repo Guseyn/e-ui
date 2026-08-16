@@ -587,6 +587,7 @@ class EDate extends HTMLInputElement {
     clearBtn.type = 'button'
     clearBtn.setAttribute('data-primary', '')
     clearBtn.setAttribute('data-fill', 'outlined')
+    clearBtn.setAttribute('data-font-size', 'xs')
     clearBtn.textContent = 'Clear'
     clearBtn.addEventListener('click', () => {
       this.#clearDate()
@@ -596,6 +597,7 @@ class EDate extends HTMLInputElement {
     todayBtn.type = 'button'
     todayBtn.setAttribute('data-primary', '')
     todayBtn.setAttribute('data-fill', 'solid')
+    todayBtn.setAttribute('data-font-size', 'xs')
     todayBtn.textContent = 'Today'
     todayBtn.addEventListener('click', () => {
       const today_ = today()
