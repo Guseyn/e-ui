@@ -1,4 +1,4 @@
-# Release 1.0.15
+# Release 1.0.16
 
-5ccdae5 update version in package.json to 1.0.15 (guseyn, Sun Aug 16 03:47:03 2026 +0400)
-2d3d3f7 ignore year and month fields (guseyn, Sun Aug 16 03:46:48 2026 +0400)
+c8c4f86 update version in package.json to 1.0.16 (guseyn, Sun Aug 16 04:18:36 2026 +0400)
+d6a413a update (guseyn, Sun Aug 16 04:18:32 2026 +0400)
