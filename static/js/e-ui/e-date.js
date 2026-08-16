@@ -36,12 +36,20 @@ class EDate extends HTMLInputElement {
   }
 
   #onEHTMLActivated() {
-    if (this.ehtmlActivated) return
+    if (this.ehtmlActivated) {
+      return
+    }
     this.ehtmlActivated = true
     this.#run()
   }
 
   #run() {
+    const isMobile = window.matchMedia('(max-width: 950px)').matches
+    if (isMobile) {
+      this.setAttribute('type', 'date')
+      return
+    }
+
     // Initialize segment buffer and active segment
     this.#buffer = { month: '', day: '', year: '' }
     this.#activeSegment = 'month'
@@ -179,7 +187,7 @@ class EDate extends HTMLInputElement {
     this.#highlightActiveSegment()
   }
 
-  #onClick(e) {
+  #onClick() {
     const pos = this.selectionStart
     const segment = segmentIndexForOffset(OFFSETS, pos)
     if (segment) {
@@ -260,6 +268,11 @@ class EDate extends HTMLInputElement {
       const currentValue = this.#buffer[this.#activeSegment]
       if (currentValue.length > 0) {
         this.#buffer[this.#activeSegment] = currentValue.slice(0, -1)
+      } else {
+        const segmentIndex = SEGMENT_ORDER.indexOf(this.#activeSegment)
+        if (segmentIndex > 0) {
+          this.#activeSegment = SEGMENT_ORDER[segmentIndex - 1]
+        }
       }
       this.#renderDisplay()
       this.#highlightActiveSegment()

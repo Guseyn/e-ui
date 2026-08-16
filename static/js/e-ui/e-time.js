@@ -33,12 +33,19 @@ class ETime extends HTMLInputElement {
   }
 
   #onEHTMLActivated() {
-    if (this.ehtmlActivated) return
+    if (this.ehtmlActivated) {
+      return
+    }
     this.ehtmlActivated = true
     this.#run()
   }
 
   #run() {
+    const isMobile = window.matchMedia('(max-width: 950px)').matches
+    if (isMobile) {
+      this.setAttribute('type', 'time')
+      return
+    }
     // Initialize segment buffer and active segment
     this.#buffer = { hour: '', minute: '', meridiem: '' }
     this.#activeSegment = 'hour'
@@ -192,6 +199,8 @@ class ETime extends HTMLInputElement {
     const isTab = e.key === 'Tab'
     const isLetterA = e.key.toLowerCase() === 'a'
     const isLetterP = e.key.toLowerCase() === 'p'
+    const isBackspace = e.key === 'Backspace'
+    const isDelete = e.key === 'Delete'
 
     if (this.#activeSegment === 'meridiem') {
       if (isLetterA) {
@@ -232,12 +241,17 @@ class ETime extends HTMLInputElement {
     } else if (isArrowRight) {
       e.preventDefault()
       this.#moveSegment(1)
-    } else if (e.key === 'Backspace' || e.key === 'Delete') {
+    } else if (isBackspace || isDelete) {
       e.preventDefault()
       // Delete one digit from right to left
       const currentValue = this.#buffer[this.#activeSegment]
       if (currentValue.length > 0) {
         this.#buffer[this.#activeSegment] = currentValue.slice(0, -1)
+      } else {
+        const segmentIndex = SEGMENT_ORDER.indexOf(this.#activeSegment)
+        if (segmentIndex > 0) {
+          this.#activeSegment = SEGMENT_ORDER[segmentIndex - 1]
+        }
       }
       this.#renderDisplay()
       this.#highlightActiveSegment()
