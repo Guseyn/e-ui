@@ -1,4 +1,4 @@
-# Release 1.0.16
+# Release 1.0.17
 
-c8c4f86 update version in package.json to 1.0.16 (guseyn, Sun Aug 16 04:18:36 2026 +0400)
-d6a413a update (guseyn, Sun Aug 16 04:18:32 2026 +0400)
+d1f3720 update version in package.json to 1.0.17 (guseyn, Sun Aug 16 12:49:34 2026 +0400)
+1de3c55 fallback for e-date and e-time for mobile + improve delete key event (guseyn, Sun Aug 16 12:49:31 2026 +0400)
