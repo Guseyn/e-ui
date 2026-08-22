@@ -247,7 +247,7 @@ Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Scre
 
 ### Slects
 
-Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [forms-buttons.png](static/images/select.png)
+Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [select.png](static/images/select.png)
 
 ```html
 <select>
