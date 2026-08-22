@@ -245,6 +245,19 @@ Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Scre
 <a is="e-link-button" data-variant="outline" href="#">Outline link button</a>
 ```
 
+### Slects
+
+Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [forms-buttons.png](static/images/select.png)
+
+```html
+<select>
+  <option>Option 1</option>
+  <option>Option 2</option>
+  <option>Option 3</option>
+  <option>Option 4</option>
+</select>
+```
+
 ### Forms
 
 Live demo: [forms-buttons.html](static/html/examples/forms-buttons.html) · Screenshot: [forms-buttons.png](static/images/forms-buttons.png)
