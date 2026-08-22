@@ -1537,7 +1537,6 @@ form[is="e-form"] label[data-flex-direction="row"] {
 }
 
 form[is="e-form"] label input,
-form[is="e-form"] label select,
 form[is="e-form"] label textarea {
   width: 100%;
   height: 2.25rem;
@@ -1562,14 +1561,12 @@ form[is="e-form"] label {
 }
 
 form[is="e-form"] label input:focus,
-form[is="e-form"] label select:focus,
 form[is="e-form"] label textarea:focus {
   border-color: var(--e-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-primary) 20%, transparent);
 }
 
 form[is="e-form"] label input:focus-visible,
-form[is="e-form"] label select:focus-visible,
 form[is="e-form"] label textarea:focus-visible,
 [is^="e-"] details summary:focus-visible {
   outline: 2px solid var(--e-primary);
@@ -3132,6 +3129,137 @@ input[is="e-time"]:focus-visible {
   outline: 2px solid var(--e-primary);
   outline-offset: 2px;
   border-radius: var(--e-radius-md);
+}
+
+/* base field styling for every <select> (fallback for browsers without base-select) */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: inherit;
+  font-size: var(--e-font-size-md);
+  display: flex;
+  padding: var(--e-spacing-sm) var(--e-spacing-md);
+  padding-right: calc(var(--e-spacing-md) * 2 + 1rem); /* room for the arrow */
+  border-radius: var(--e-radius-xl);
+  border: 1px solid var(--e-border);
+  background-color: var(--e-muted-bg);
+  color: var(--e-fg);
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+  /* custom arrow — neutral (--e-muted) by default */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%2336454F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--e-spacing-md) center;
+  background-size: 1rem;
+}
+
+/* keep selects full-width and aligned with sibling fields inside an e-form */
+form[is="e-form"] label select {
+  width: 100%;
+  height: 2.25rem;
+}
+
+/* hover: primary-tinted border + primary arrow */
+select:hover {
+  border-color: color-mix(in srgb, var(--e-primary) 40%, var(--e-border));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233551A4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+}
+
+/* focus: primary border + color-mix glow ring — same treatment as input[is="e-date"]:focus */
+select:focus {
+  border-color: var(--e-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-primary) 20%, transparent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%233551A4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+}
+
+select:focus-visible {
+  outline: 2px solid var(--e-primary);
+  outline-offset: 2px;
+  border-radius: var(--e-radius-md);
+}
+
+select option,
+select optgroup {
+  font-family: inherit;
+  font-size: var(--e-font-size-md);
+  background-color: var(--e-surface-bg);
+  color: var(--e-fg);
+  padding: var(--e-spacing-sm) var(--e-spacing-md);
+}
+
+select option:not(:first-child),
+select optgroup:not(:first-child) {
+  margin-top: var(--e-spacing-xs);
+}
+
+select optgroup {
+  font-weight: var(--e-font-bold);
+  color: var(--e-muted);
+}
+
+/*
+ * Customizable <select> (progressive enhancement).
+ * `appearance: base-select` cancels the browser's native rendering so the picker
+ * and its options become real, fully-stylable elements — including on macOS/Safari
+ * where native option styling is otherwise ignored.
+ * Browsers without support drop this whole rule (unknown ::picker() selector) and
+ * fall back to the `appearance: none` field + native option list above.
+ * See: https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select
+ */
+select,
+select::picker(select) {
+  appearance: base-select;
+}
+
+/* keep our single background-image chevron; suppress the default picker arrow */
+select::picker-icon {
+  display: none;
+}
+
+/* the dropdown popup container */
+select::picker(select) {
+  border: 1px solid var(--e-border);
+  border-radius: var(--e-radius-lg);
+  background-color: var(--e-surface-bg);
+  box-shadow: var(--e-shadow-lg);
+  padding: var(--e-spacing-sm);
+  margin-top: var(--e-spacing-xs);
+  margin-bottom: var(--e-spacing-xs);
+}
+
+/* options as real elements in base-select mode */
+select option {
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  gap: var(--e-spacing-sm);
+  border-radius: var(--e-radius-md);
+  cursor: pointer;
+}
+
+/* highlighted while hovering / keyboard-navigating — soft primary tint */
+select option:hover,
+select option:focus {
+  border: 1px solid var(--e-primary);
+  background-color: var(--e-primary-transparent-accent-bg);
+  color: var(--e-fg);
+}
+
+/* the leading checkmark on the selected option */
+select option::checkmark {
+  content: "✓";
+  color: var(--e-primary);
+  font-weight: var(--e-font-bold);
+}
+
+/* selected option keeps the primary accent even while hovered */
+select option:checked,
+select option:checked:hover {
+  border: 1px solid var(--e-primary);
+  background-color: var(--e-primary-transparent-accent-bg);
 }
 
 span[data-e-date-wrapper] {
