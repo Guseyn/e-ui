@@ -1,4 +1,4 @@
-# Release 1.0.17
+# Release 1.0.18
 
-d1f3720 update version in package.json to 1.0.17 (guseyn, Sun Aug 16 12:49:34 2026 +0400)
-1de3c55 fallback for e-date and e-time for mobile + improve delete key event (guseyn, Sun Aug 16 12:49:31 2026 +0400)
+b84b3c2 update version in package.json to 1.0.18 (guseyn, Sat Aug 22 14:35:54 2026 +0400)
+774fcb2 update select css (guseyn, Sat Aug 22 14:35:48 2026 +0400)
