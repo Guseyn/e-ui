@@ -385,7 +385,7 @@
 *[data-background="muted"], [is^="e-"][data-background="muted"] { background-color: var(--e-muted-bg) !important; }
 *[data-background="primary"], [is^="e-"][data-background="primary"] { background-color: var(--e-primary) !important; }
 *[data-background="danger"], [is^="e-"][data-background="danger"] { background-color: var(--e-error) !important; }
-*[data-background="success"], [is^="e-"][data-background="sueccess"] { background: var(--e-success) !important; }
+*[data-background="success"], [is^="e-"][data-background="success"] { background: var(--e-success) !important; }
 *[data-background="danger-transparent"], [is^="e-"][data-background="danger"] { background: color-mix(in srgb, var(--e-error), transparent 90%) !important; }
 *[data-background="success-transparent"], [is^="e-"][data-background="success-transparent"] { background-color: color-mix(in srgb, var(--e-success), transparent 90%) !important; }
 *[data-background="blurred"], [is^="e-"][data-background="blurred"] { background-color: transparent !important; backdrop-filter: blur(var(--e-blur-lg)) !important; -webkit-backdrop-filter: blur(var(--e-blur-lg)) !important; }
@@ -398,14 +398,14 @@
 *[data-color="light"], [is^="e-"][data-color="light"] { color: var(--e-light) !important; }
 *[data-color="primary"], [is^="e-"][data-color="primary"] { color: var(--e-primary) !important; }
 *[data-color="danger"], [is^="e-"][data-color="danger"] { color: var(--e-error) !important; }
-*[data-color="success"], [is^="e-"][data-color="sueccess"] { color: var(--e-success) !important; }
+*[data-color="success"], [is^="e-"][data-color="success"] { color: var(--e-success) !important; }
 
 *[data-border-color="primary"], [is^="e-"][data-border-color="primary"] { border-color: var(--e-primary) !important; }
 *[data-border-color="default"], [is^="e-"][data-border-color="default"] { border-color: var(--e-color-border) !important; }
 *[data-border-color="muted"], [is^="e-"][data-border-color="muted"]   { border-color: var(--e-divider) !important; }
 *[data-border-color="focus"], [is^="e-"][data-border-color="focus"]   { border-color: var(--e-color-focus) !important; }
 *[data-border-color="danger"], [is^="e-"][data-border-color="danger"] { border-color: var(--e-error) !important; }
-*[data-border-color="success"], [is^="e-"][data-border-color="sueccess"] { border-color: var(--e-success) !important; }
+*[data-border-color="success"], [is^="e-"][data-border-color="success"] { border-color: var(--e-success) !important; }
 
 *[data-border-radius="0"], [is^="e-"][data-border-radius="0"] { border-radius: 0 !important; }
 *[data-border-radius="2xs"], [is^="e-"][data-border-radius="2xs"] { border-radius: var(--e-radius-2xs) !important; }
@@ -434,11 +434,12 @@
 *[data-text-align="right"], [is^="e-"][data-text-align="right"]  { text-align: right !important; }
 *[data-text-align="left"], [is^="e-"][data-text-align="left"]  { text-align: left !important; }
 
-*[data-resepect-new-lines], [is^="e-"][data-resepect-new-lines] {
+*[data-respect-new-lines], [is^="e-"][data-respect-new-lines],
+*[data-resepect-new-lines], [is^="e-"][data-resepect-new-lines] { /* old misspelled name kept for compatibility */
   white-space: pre-wrap;
 }
 
-*[data-diabled="true"], [is^="e-"][data-disabled="true"] {
+*[data-disabled="true"], [is^="e-"][data-disabled="true"] {
   opacity: 0.6;
 }
 
@@ -546,7 +547,7 @@ button[is="e-with-icon"] img[data-size="xl"] {
 }
 img[data-size="2xl"],
 div[is="e-user-avatar"][data-size="2xl"],
-button[is="e-with-icon"] img[data-size="2xl"]] {
+button[is="e-with-icon"] img[data-size="2xl"] {
   width: var(--e-img-2xl) !important;
   height: var(--e-img-2xl)  !important;
 }
@@ -1066,8 +1067,70 @@ button, input, optgroup, select, textarea {
   box-sizing: border-box;
 }
 
+/*
+The `hidden` attribute has to keep working.
+
+Browsers hide it from their own stylesheet, and any author rule that sets a
+display — `select { display: flex }` further down does — beats a user agent one
+whatever its specificity. Without this, hiding a styled element by attribute
+silently does nothing.
+*/
+[hidden] {
+  display: none !important;
+}
+
 select {
   cursor: pointer;
+}
+
+/*
+A text field looks the same wherever it is.
+
+`select` is styled globally further down, but `input` and `textarea` used to be
+styled only inside `form[is="e-form"]`. Three controls side by side outside a
+form therefore came out looking like two different libraries. This gives them
+the base a select already had; the form rules add only width and height on top.
+
+One `:not()` holding a list rather than a chain of them, so the whole thing
+stays at the specificity of a single attribute and the components that style
+their own inputs — `input[is="e-date"]`, `input[is="e-time"]` — still win on
+source order.
+*/
+input:not(
+  [type="checkbox"], [type="radio"], [type="range"], [type="color"],
+  [type="file"], [type="image"], [type="submit"], [type="reset"], [type="button"]
+),
+textarea {
+  font-family: inherit;
+  font-size: var(--e-font-size-md);
+  padding: var(--e-spacing-sm) var(--e-spacing-md);
+  border-radius: var(--e-radius-md);
+  border: 1px solid var(--e-border);
+  background-color: var(--e-muted-bg);
+  color: var(--e-fg);
+  outline: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+input:not(
+  [type="checkbox"], [type="radio"], [type="range"], [type="color"],
+  [type="file"], [type="image"], [type="submit"], [type="reset"], [type="button"]
+):hover,
+textarea:hover {
+  border-color: color-mix(in srgb, var(--e-primary) 40%, var(--e-border));
+}
+
+input:not(
+  [type="checkbox"], [type="radio"], [type="range"], [type="color"],
+  [type="file"], [type="image"], [type="submit"], [type="reset"], [type="button"]
+):focus,
+textarea:focus {
+  border-color: var(--e-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-primary) 20%, transparent);
 }
 
 textarea {
