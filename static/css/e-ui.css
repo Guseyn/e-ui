@@ -2593,6 +2593,18 @@ e-sidebar[data-state="open"] header img {
   max-height: var(--e-img-xl);
 }
 
+/* Content waits until the sidebar is fully open (see e-sidebar.js) */
+e-sidebar[data-opening] > * {
+  visibility: hidden;
+}
+
+/* The state it starts in is set without animating there */
+e-sidebar[data-no-transition],
+slot:has(e-sidebar[data-no-transition]) + main,
+e-sidebar[data-no-transition] + main {
+  transition: none;
+}
+
 slot:has(e-sidebar[data-side="left"]) + main,
 e-sidebar[data-side="left"] + main {
   transform: translateX(var(--e-sidebar-collapsed));

@@ -1,4 +1,10 @@
+// Must match the mobile breakpoint in e-ui.css: below it the sidebar slides in
+// at its full width, instead of widening.
+const MOBILE_LAYOUT = '(max-width: 980px)'
+
 class ESidebar extends HTMLElement {
+  #openingTimer = null
+
   constructor() {
     super()
     this.ehtmlActivated = false
@@ -18,11 +24,15 @@ class ESidebar extends HTMLElement {
     }
     this.ehtmlActivated = true
     const isMobile = window.matchMedia('(max-width: 950px)').matches
-    if (!isMobile && sessionStorage.getItem('e-sidebar-open')) {
-      this.setAttribute('data-state', 'open')
-    } else {
-      this.setAttribute('data-state', 'closed')
-    }
+    // The state it starts in is not a change the reader made, so it is not animated
+    this.#withoutTransition(() => {
+      if (!isMobile && sessionStorage.getItem('e-sidebar-open')) {
+        this.setAttribute('data-state', 'open')
+      } else {
+        this.setAttribute('data-state', 'closed')
+      }
+    })
+    this.addEventListener('transitionend', this.#onTransitionEnd)
     if (sessionStorage.getItem('eSidebarScrollTop')) {
       this.querySelector('nav').scrollTo(
         {
@@ -134,17 +144,74 @@ class ESidebar extends HTMLElement {
   }
 
   open() {
+    const wasOpen = this.getAttribute('data-state') === 'open'
     this.setAttribute('data-state', 'open')
+    if (!wasOpen) {
+      this.#hideContentUntilWide()
+    }
     sessionStorage.setItem('e-sidebar-open', 'true')
     this.#updateMobileMenuButton(true)
     this.#adjustPaddingOfNav()
   }
 
   close() {
+    this.#showContent()
     this.setAttribute('data-state', 'closed')
     sessionStorage.removeItem('e-sidebar-open')
     this.#updateMobileMenuButton(false)
     this.#adjustPaddingOfNav()
+  }
+
+  #withoutTransition(change) {
+    this.setAttribute('data-no-transition', '')
+    change()
+    // Commit the new state with no transition, then allow them again
+    void this.offsetWidth
+    requestAnimationFrame(() => this.removeAttribute('data-no-transition'))
+  }
+
+  /*
+  On desktop the sidebar opens by widening, and what it shows when open (labels,
+  the full logo) would be laid out in a width it does not have yet and reflow on
+  every frame. So its content stays hidden (data-opening) until it is fully
+  open. On mobile it slides in at its full width, so there is nothing to wait for.
+  */
+  #hideContentUntilWide() {
+    const time = this.#widthTransitionTime()
+    if (time === 0 || window.matchMedia(MOBILE_LAYOUT).matches) {
+      return
+    }
+    this.setAttribute('data-opening', '')
+    clearTimeout(this.#openingTimer)
+    // transitionend is not guaranteed (an interrupted transition, a hidden tab)
+    this.#openingTimer = setTimeout(() => this.#showContent(), time + 50)
+  }
+
+  #onTransitionEnd = (event) => {
+    if (event.target === this && event.propertyName === 'width') {
+      this.#showContent()
+    }
+  }
+
+  #showContent() {
+    clearTimeout(this.#openingTimer)
+    this.removeAttribute('data-opening')
+  }
+
+  // Duration plus delay of the width transition, in ms (0 when there is none)
+  #widthTransitionTime() {
+    const style = window.getComputedStyle(this)
+    const properties = style.transitionProperty.split(',').map(property => property.trim())
+    const index = properties.findIndex(property => property === 'width' || property === 'all')
+    if (index === -1) {
+      return 0
+    }
+    const ms = (list) => {
+      const values = list.split(',')
+      const value = values[index % values.length].trim()
+      return parseFloat(value) * (value.endsWith('ms') ? 1 : 1000)
+    }
+    return ms(style.transitionDuration) + ms(style.transitionDelay)
   }
 
   #updateMobileMenuButton(isOpen) {
