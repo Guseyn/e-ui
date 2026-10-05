@@ -1307,6 +1307,10 @@ span[is="e-text"] {
   color: var(--e-fg);
 }
 
+span[is="e-primary"] {
+  color: var(--e-primary);
+}
+
 span[is="e-muted"] {
   font-size: var(--e-font-size-md);
   color: var(--e-muted);
