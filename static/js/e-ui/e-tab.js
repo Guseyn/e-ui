@@ -42,8 +42,11 @@ class ETabs extends HTMLElement {
     }
     this.ehtmlActivated = true
     window.addEventListener('hashchange', () => {
+      // A hash that names no tab of this one (a heading, another tabs) is not ours to change
       const tabIndexByUrlHash = this.#hashToTabIndex()
-      this.selectTab(tabIndexByUrlHash)
+      if (tabIndexByUrlHash !== -1) {
+        this.selectTab(tabIndexByUrlHash)
+      }
     })
     this.#run()
   }
@@ -65,22 +68,37 @@ class ETabs extends HTMLElement {
 
       this.prepend(this.#nav)
 
-      if (this.hasAttribute('data-apply-hash-navigation')) {
-        const tabIndexByUrlHash = this.#hashToTabIndex()
-        if (tabIndexByUrlHash !== -1) {
-          this.selectTab(tabIndexByUrlHash)
-        } else if (this.hasAttribute('data-current-tab')) {
-          this.selectTab(parseInt(this.getAttribute('data-current-tab')))
-        } else {
-          this.selectTab(0)
-        }
+      /*
+      The tab a URL names is opened and scrolled to. Otherwise the default one
+      is opened without touching the hash: the URL may name something else on
+      the page, and only a click on a tab should replace it.
+      */
+      const tabIndexByUrlHash = this.hasAttribute('data-apply-hash-navigation')
+        ? this.#hashToTabIndex()
+        : -1
+      if (tabIndexByUrlHash !== -1) {
+        this.selectTab(tabIndexByUrlHash)
+        this.scrollIntoView()
+      } else if (this.hasAttribute('data-current-tab')) {
+        this.selectTab(parseInt(this.getAttribute('data-current-tab')), { updateHash: false })
       } else {
-        this.selectTab(0)
+        this.selectTab(0, { updateHash: false })
+      }
+
+      /*
+      Until now no tab was shown, so opening one moves everything below it.
+      If the URL names an element elsewhere on the page, it is scrolled to again.
+      */
+      if (tabIndexByUrlHash === -1 && window.location.hash) {
+        const target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
+        if (target) {
+          target.scrollIntoView()
+        }
       }
     })
   }
 
-  selectTab(index) {
+  selectTab(index, { updateHash = true } = {}) {
     const tabs = this.#getSelfTabs()
     const buttons = this.#nav.querySelectorAll('button')
 
@@ -98,7 +116,7 @@ class ETabs extends HTMLElement {
 
     this.setAttribute('data-current-tab', index)
 
-    if (this.hasAttribute('data-apply-hash-navigation')) {
+    if (updateHash && this.hasAttribute('data-apply-hash-navigation')) {
       const selectedTab = tabs[index]
       window.location.hash = this.#titleToHash(
         selectedTab.getAttribute('data-title') || `Tab ${index + 1}`
@@ -122,7 +140,7 @@ class ETabs extends HTMLElement {
       const hash = this.#titleToHash(tab.getAttribute('data-title') || `Tab ${index + 1}`)
       tabHashes.push(`#${hash}`)
     })
-    return Math.max(tabHashes.indexOf(hash), 0)
+    return tabHashes.indexOf(hash)
   }
 }
 
