@@ -1,6 +1,7 @@
-# Release 1.0.19
+# Release 1.0.21
 
-b8d48e0 update version in package.json to 1.0.19 (guseyn, Sun Sep 27 12:34:41 2026 +0400)
-90131dc update (guseyn, Sun Sep 27 12:34:39 2026 +0400)
-a9836a1 update docs (guseyn, Sat Aug 22 14:43:22 2026 +0400)
-fca635a update docs (guseyn, Sat Aug 22 14:42:43 2026 +0400)
+589a143 update version in package.json to 1.0.21 (guseyn, Mon Oct 5 22:54:12 2026 +0400)
+7feea30 update version in package.json to (guseyn, Mon Oct 5 22:52:32 2026 +0400)
+711be0b add span[is=e-primary] (guseyn, Mon Oct 5 22:52:22 2026 +0400)
+8952611 Leave a hash that names no tab alone in e-tabs' hash navigation (guseyn, Mon Oct 5 22:49:15 2026 +0400)
+3060016 Show e-sidebar's content only once it is fully open (guseyn, Sat Oct 3 14:06:00 2026 +0400)
